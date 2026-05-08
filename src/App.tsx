@@ -59,9 +59,11 @@ export default function App() {
 
   useEffect(() => {
     if (selectedPost) {
-      window.history.replaceState({}, '', `${window.location.pathname}?post=${selectedPost.id}`);
+      window.history.pushState({}, '', `${window.location.pathname}?post=${selectedPost.id}`);
+      document.title = `Klebsuchan | ${selectedPost.title.rendered.replace(/<[^>]+>/g, '')}`;
     } else {
-      window.history.replaceState({}, '', window.location.pathname);
+      window.history.pushState({}, '', window.location.pathname);
+      document.title = "Klebsuchan | Hub de Cultura Otaku, Nerd e Geek";
     }
   }, [selectedPost]);
 
@@ -80,9 +82,6 @@ export default function App() {
   useEffect(() => {
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
-      setShowCookieConsent(true);
-    } else {
-      // Temporariamente mostrando a barra de cookies mesmo se já aceitou (para testes)
       setShowCookieConsent(true);
     }
   }, []);
@@ -392,7 +391,7 @@ export default function App() {
         </div>
       )}
       
-      <header className="sticky top-0 h-20 px-5 lg:px-10 flex items-center justify-between border-b border-border shrink-0 gap-4 z-40 bg-bg shadow-md">
+      <header className="sticky top-0 h-auto min-h-[80px] py-4 lg:py-0 px-5 lg:px-10 flex items-center justify-between border-b border-border shrink-0 gap-4 z-40 bg-bg shadow-md">
         <div className="flex-1 hidden md:block">
           <nav className="flex gap-[15px] lg:gap-[20px] text-[10px] lg:text-[12px] uppercase tracking-[1px] text-muted">
             <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</span>
