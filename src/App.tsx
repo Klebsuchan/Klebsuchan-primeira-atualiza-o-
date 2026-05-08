@@ -220,15 +220,15 @@ export default function App() {
     1027: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/WARCRAFT.webp", // World of Warcraft
     1028: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/the-witcher.avif?v=1", // The Witcher 3
     1029: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/red-dead-redemption.jpg?v=1", // Red Dead Redemption 2
-    1030: "/resident-evil4.webp", // Resident Evil 4
-    1031: "/Finalfantasy7.avif", // Final Fantasy VII
-    1032: "/streetfighter2.avif", // Street Fighter II
-    1033: "/mortalkombat.jpg", // Mortal Kombat
+    1030: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/RESIDENT-EVIL.jpg", // Resident Evil 4
+    1031: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/FINAL%20FANTASY.webp", // Final Fantasy VII
+    1032: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/STREET-FIGHTER.jpg", // Street Fighter II
+    1033: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/MORTAL%20KOMBAT.jpg", // Mortal Kombat
     1034: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/TETRIS.jpg", // Tetris
-    1035: "/pacman.jpg", // Pac-Man
+    1035: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/PAC-MAN.webp", // Pac-Man
     1036: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/VALORANT.webp", // Valorant
-    1037: "/overwatch.jpg", // Overwatch
-    1038: "/elden-ring.webp", // Elden Ring
+    1037: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/OVVERWATCH.webp", // Overwatch
+    1038: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/ELDEN%20RING.jpg", // Elden Ring
     1039: "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/CYBERPUNK.jpg", // Cyberpunk 2077
   };
 
