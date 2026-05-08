@@ -26,9 +26,14 @@ async function startServer() {
     app.get('*', (req, res) => {
       let html = '';
       try {
-        html = fs.readFileSync(path.join(distPath, 'index.html'), 'utf8');
+        html = fs.readFileSync(path.join(distPath, 'base.html'), 'utf8');
       } catch (e) {
-        return res.status(404).send('Not found');
+        // Fallback para desenvolvimento (Vite original index.html)
+        try {
+          html = fs.readFileSync(path.join(process.cwd(), 'index.html'), 'utf8');
+        } catch (err) {
+          return res.status(404).send('Not found');
+        }
       }
 
       const postId = req.query.post;
@@ -40,15 +45,17 @@ async function startServer() {
           const post = posts.find((p: any) => p.id.toString() === postId.toString());
           if (post) {
             const title = post.title?.rendered?.replace(/<[^>]+>/g, '') || 'Klebsuchan';
-            const excerpt = post.excerpt?.rendered?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Confira este artigo na Klebsuchan!';
+            let excerpt = post.excerpt?.rendered?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Confira este artigo na Klebsuchan!';
+            excerpt = excerpt.replace(/"/g, '&quot;');
+            const safeTitle = title.replace(/"/g, '&quot;');
             const imageUrl = post.imageUrl || post.jetpack_featured_media_url || 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1';
             
-            html = html.replace(/<title>.*?<\/title>/, `<title>${title} | Klebsuchan</title>`);
-            html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${title} | Klebsuchan"`);
+            html = html.replace(/<title>.*?<\/title>/, `<title>${safeTitle} | Klebsuchan</title>`);
+            html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${safeTitle} | Klebsuchan"`);
             html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${excerpt}"`);
             html = html.replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${excerpt}"`);
             html = html.replace(/<meta property="og:image" content="[^"]*"/, `<meta property="og:image" content="${imageUrl}"`);
-            html = html.replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${title} | Klebsuchan"`);
+            html = html.replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${safeTitle} | Klebsuchan"`);
             html = html.replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${excerpt}"`);
             html = html.replace(/<meta name="twitter:image" content="[^"]*"/, `<meta name="twitter:image" content="${imageUrl}"`);
 

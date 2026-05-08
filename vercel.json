@@ -2,7 +2,7 @@
   "version": 2,
   "functions": {
     "api/index.ts": {
-      "includeFiles": "src/data/posts.json"
+      "includeFiles": "src/data/posts.json, dist/base.html"
     }
   },
   "rewrites": [
@@ -12,7 +12,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/index.ts"
     }
   ],
   "env": {
