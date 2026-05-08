@@ -1,0 +1,52 @@
+[
+  {
+    "id": 101,
+    "count": 12,
+    "description": "Notícias e análises do mundo dos animes e cultura Otaku.",
+    "link": "/category/anime",
+    "name": "Animes & Mangás",
+    "slug": "anime",
+    "taxonomy": "category",
+    "parent": 0
+  },
+  {
+    "id": 103,
+    "count": 15,
+    "description": "Tudo sobre lançamentos, eSports e análises de jogos.",
+    "link": "/category/games",
+    "name": "Games & eSports",
+    "slug": "games",
+    "taxonomy": "category",
+    "parent": 0
+  },
+  {
+    "id": 105,
+    "count": 10,
+    "description": "Discussões e notícias sobre cultura Pop, Filmes e Séries.",
+    "link": "/category/cultura-pop",
+    "name": "Cultura Pop",
+    "slug": "cultura-pop",
+    "taxonomy": "category",
+    "parent": 0
+  },
+  {
+    "id": 107,
+    "count": 5,
+    "description": "Inovações, hardware, software e gadgets.",
+    "link": "/category/tecnologia",
+    "name": "Tecnologia",
+    "slug": "tecnologia",
+    "taxonomy": "category",
+    "parent": 0
+  },
+  {
+    "id": 109,
+    "count": 30,
+    "description": "Os melhores memes nerd, geek, otaku e muito humor.",
+    "link": "/category/memes",
+    "name": "Memes & Humor",
+    "slug": "memes",
+    "taxonomy": "category",
+    "parent": 0
+  }
+]
