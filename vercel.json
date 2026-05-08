@@ -2,6 +2,9 @@
   "version": 2,
   "functions": {
     "api/index.ts": {
+      "includeFiles": "src/data/posts.json"
+    },
+    "api/ssr.ts": {
       "includeFiles": "src/data/posts.json, dist/base.html"
     }
   },
@@ -12,7 +15,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/api/index.ts"
+      "destination": "/api/ssr.ts"
     }
   ],
   "env": {
