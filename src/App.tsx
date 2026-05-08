@@ -1,5 +1,6 @@
 import { Instagram, LogOut, AlertCircle, Menu, ArrowLeft, Facebook, Twitter, Share2, Search, Sun, Moon, ShoppingBag, Youtube } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { auth } from './firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 import { fetchPosts, Post } from './services/api';
@@ -58,11 +59,9 @@ export default function App() {
 
   useEffect(() => {
     if (selectedPost) {
-      window.history.pushState({}, '', `${window.location.pathname}?post=${selectedPost.id}`);
-      document.title = `Klebsuchan | ${selectedPost.title.rendered.replace(/<[^>]+>/g, '')}`;
+      window.history.replaceState({}, '', `${window.location.pathname}?post=${selectedPost.id}`);
     } else {
-      window.history.pushState({}, '', window.location.pathname);
-      document.title = "Klebsuchan | Hub de Cultura Otaku, Nerd e Geek";
+      window.history.replaceState({}, '', window.location.pathname);
     }
   }, [selectedPost]);
 
@@ -369,6 +368,18 @@ export default function App() {
 
   return (
     <div className="flex flex-col min-h-screen w-full bg-bg text-accent font-sans relative">
+      <Helmet>
+        <title>{selectedPost ? `${selectedPost.title.rendered.replace(/<[^>]+>/g, '')} | Klebsuchan` : activeTab === 'quem-somos' ? 'Quem Somos | Klebsuchan' : 'Klebsuchan | Hub de Cultura Otaku, Nerd e Geek'}</title>
+        {selectedPost && (
+          <meta property="og:title" content={selectedPost.title.rendered.replace(/<[^>]+>/g, '')} />
+        )}
+        {selectedPost && selectedPost.excerpt && (
+          <meta property="og:description" content={selectedPost.excerpt.rendered.replace(/<[^>]+>/g, '')} />
+        )}
+        {selectedPost && getPostImage(selectedPost) && (
+          <meta property="og:image" content={getPostImage(selectedPost)} />
+        )}
+      </Helmet>
 
       {authError && (
         <div className="absolute top-20 left-1/2 -translate-x-1/2 z-50 bg-red-900/90 text-white px-4 py-3 rounded shadow-lg flex items-center gap-3 max-w-md w-[90%] border border-red-700">
@@ -378,7 +389,7 @@ export default function App() {
         </div>
       )}
       
-      <header className="sticky top-0 h-auto min-h-[80px] py-4 lg:py-0 px-5 lg:px-10 flex items-center justify-between border-b border-border shrink-0 gap-4 z-40 bg-bg shadow-md">
+      <header className="sticky top-0 h-20 px-5 lg:px-10 flex items-center justify-between border-b border-border shrink-0 gap-4 z-40 bg-bg shadow-md">
         <div className="flex-1 hidden md:block">
           <nav className="flex gap-[15px] lg:gap-[20px] text-[10px] lg:text-[12px] uppercase tracking-[1px] text-muted">
             <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</span>
