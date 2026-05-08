@@ -239,7 +239,7 @@ app.post("/api/subscribe", async (req, res) => {
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center" bgcolor="#ffd700" style="border-radius: 8px;">
-                      <a href="${baseUrl}/?post=17" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
+                      <a href="https://www.klebsuchan.com.br/?post=17" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
                     </td>
                   </tr>
                 </table>
@@ -257,7 +257,7 @@ app.post("/api/subscribe", async (req, res) => {
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center" bgcolor="#ffd700" style="border-radius: 8px;">
-                      <a href="${baseUrl}/?post=1023" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
+                      <a href="https://www.klebsuchan.com.br/?post=1023" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
                     </td>
                   </tr>
                 </table>
@@ -398,7 +398,7 @@ app.post("/api/notify-new-post", async (req, res) => {
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center" bgcolor="#ffd700" style="border-radius: 8px;">
-                      <a href="${baseUrl}/?post=${postId}" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
+                      <a href="https://www.klebsuchan.com.br/?post=${postId}" target="_blank" style="font-size: 14px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #000000; text-decoration: none; padding: 14px 24px; border-radius: 8px; font-weight: 800; display: inline-block; text-transform: uppercase; line-height: 1;">Ler Artigo Completo</a>
                     </td>
                   </tr>
                 </table>
