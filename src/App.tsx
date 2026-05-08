@@ -81,6 +81,9 @@ export default function App() {
     const consent = localStorage.getItem('cookieConsent');
     if (!consent) {
       setShowCookieConsent(true);
+    } else {
+      // Temporariamente mostrando a barra de cookies mesmo se já aceitou (para testes)
+      setShowCookieConsent(true);
     }
   }, []);
 
