@@ -3,9 +3,6 @@
   "functions": {
     "api/index.ts": {
       "includeFiles": "src/data/posts.json"
-    },
-    "api/ssr.ts": {
-      "includeFiles": "src/data/posts.json, dist/base.html"
     }
   },
   "rewrites": [
@@ -15,7 +12,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/api/ssr.ts"
+      "destination": "/index.html"
     }
   ],
   "env": {

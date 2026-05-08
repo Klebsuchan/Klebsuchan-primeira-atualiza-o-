@@ -6,11 +6,6 @@ import fs from "fs";
 import { fileURLToPath } from "url";
 import { createClient } from "@supabase/supabase-js";
 
-// @ts-ignore
-const __filename = typeof fileURLToPath === 'function' ? fileURLToPath(import.meta.url || 'file://' + __filename) : '';
-// @ts-ignore
-const __dirname = path.dirname(__filename);
-
 export const app = express();
 app.use(express.json());
 
@@ -453,10 +448,10 @@ app.post("/api/notify-new-post", async (req, res) => {
 app.get("/api/posts", (req, res) => {
   try {
     // Try multiple paths to find posts.json because Vercel changes the working directory
+    const cwd = process.cwd();
     const possiblePaths = [
-      path.join(process.cwd(), 'src', 'data', 'posts.json'),
-      path.join(__dirname, '..', 'src', 'data', 'posts.json'),
-      path.join(__dirname, 'src', 'data', 'posts.json'),
+      path.join(cwd, 'src', 'data', 'posts.json'),
+      path.join(cwd, '..', 'src', 'data', 'posts.json'),
       path.join('/tmp', 'posts.json') // Vercel tmp fallback if needed
     ];
 
@@ -484,5 +479,6 @@ app.get("/api/posts", (req, res) => {
     res.status(500).json({ error: "Erro ao carregar posts: " + err.message });
   }
 });
+
 
 export default app;
