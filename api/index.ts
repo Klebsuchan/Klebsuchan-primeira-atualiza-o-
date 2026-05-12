@@ -166,6 +166,20 @@ app.post("/api/subscribe", async (req, res) => {
       return res.status(400).json({ error: "Erro ao salvar no banco: " + dbError.message });
     }
 
+    // Adiciona o contato na aba Contacts do Resend, se o Audience ID estiver configurado
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
+    if (audienceId) {
+      try {
+        await resend.contacts.create({
+          audienceId: audienceId,
+          email: email
+        });
+        console.log(`Email ${email} adicionado ao Audience do Resend com sucesso.`);
+      } catch (contactError) {
+        console.error("Erro ao adicionar contato no Resend:", contactError);
+      }
+    }
+
     const domain = process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
     const baseUrl = req.headers.origin || process.env.APP_URL || 'https://klebsuchan.com.br';
     
