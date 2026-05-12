@@ -180,16 +180,20 @@ app.post("/api/subscribe", async (req, res) => {
       }
     }
 
-    const domain = process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
+    let fromEmail = process.env.RESEND_FROM_EMAIL || process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
+    
+    if (fromEmail.toLowerCase().includes('@gmail.com')) {
+      fromEmail = 'newsletter@klebsuchan.com.br';
+    }
+
+    const domain = fromEmail;
     const baseUrl = req.headers.origin || process.env.APP_URL || 'https://klebsuchan.com.br';
     
-    // Como o domínio ainda não está validado, só envia para o e-mail do autor
-    if (email.toLowerCase() === 'braian.kleber.camargo@gmail.com') {
-      try {
-        const { error } = await resend.emails.send({
-          from: `Klebsuchan Newsletter <${domain}>`,
-          to: email, // enviando para o email que se cadastrou
-          subject: "Bem-vindo à Guilda Klebsuchan!",
+    try {
+      const { error } = await resend.emails.send({
+        from: `Klebsuchan Newsletter <${domain}>`,
+        to: email, // enviando para o email que se cadastrou
+        subject: "Bem-vindo à Guilda Klebsuchan!",
         html: `
 <!DOCTYPE html>
 <html>
@@ -303,7 +307,6 @@ app.post("/api/subscribe", async (req, res) => {
       } catch (emailError) {
         console.error("Falha ao chamar a Resend (ignorado):", emailError);
       }
-    }
 
     return res.status(200).json({ success: true, message: "Inscrito com sucesso!" });
   } catch (err: any) {
@@ -321,35 +324,74 @@ app.post("/api/notify-new-post", async (req, res) => {
       return res.status(400).json({ error: "Dados do post incompletos (postId e postTitle são obrigatórios)" });
     }
 
-    // Busca todos os emails inscritos
-    const supabase = createClient(
-      'https://eezccvpkexmssynooupi.supabase.co',
-      process.env.VITE_SUPABASE_ANON_KEY || ''
-    );
+    let emailsToSend: any[] = [];
+    const audienceId = process.env.RESEND_AUDIENCE_ID;
     
-    const { data: subscribers, error: dbError } = await supabase
-      .from('newsletters')
-      .select('email');
-      
-    if (dbError) {
-      console.error("Erro ao buscar emails no Supabase:", dbError);
-      return res.status(500).json({ error: "Erro ao buscar inscritos: " + dbError.message });
+    // Buscar da Audience do Resend
+    if (audienceId) {
+      try {
+        const contactsResponse = await resend.contacts.list({ audienceId });
+        if (contactsResponse.data && contactsResponse.data.data) {
+          const resendEmails = contactsResponse.data.data
+            .filter((c: any) => !c.unsubscribed)
+            .map((c: any) => c.email);
+          emailsToSend = [...new Set([...emailsToSend, ...resendEmails])];
+        }
+      } catch (err) {
+        console.error("Erro ao buscar contatos da Audience no Resend:", err);
+      }
     }
 
-    let emailsToSend: any[] = [];
-    if (subscribers && subscribers.length > 0) {
-      emailsToSend = subscribers.map(s => s.email);
-    } else {
-      console.log("Aviso: RLS pode estar bloqueando a leitura da tabela newsletters (ou ela está vazia). Enviando email de teste para o administrador.");
-      emailsToSend = ["braian.kleber.camargo@gmail.com"];
+    // Buscar do Supabase (newsletters table)
+    try {
+      const supabase = createClient(
+        'https://eezccvpkexmssynooupi.supabase.co',
+        process.env.VITE_SUPABASE_ANON_KEY || ''
+      );
+      const { data: subscribers, error: subError } = await supabase
+        .from('newsletters')
+        .select('email');
+      
+      if (subscribers && !subError) {
+        const supabaseEmails = subscribers.map((s: any) => s.email);
+        emailsToSend = [...new Set([...emailsToSend, ...supabaseEmails])];
+      }
+    } catch (err) {
+      console.error("Erro ao buscar contatos do Supabase:", err);
     }
 
     if (emailsToSend.length === 0) {
-      return res.status(200).json({ success: true, message: "Aviso: Nenhum email para envio no momento." });
+      console.log("Aviso: Falha ao buscar a lista da Resend ou lista vazia. Enviando apenas para o administrador.");
+      emailsToSend = ["braian.kleber.camargo@gmail.com"];
     }
 
-    const domain = process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
+    let fromEmail = process.env.RESEND_FROM_EMAIL || process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
+    
+    // O Resend não permite envio por domínios gratuitos como @gmail.com se o domínio não puder ser verificado.
+    // Como você mencionou que o domínio está verificado, forçamos um email do seu domínio, caso use @gmail.com.
+    if (fromEmail.toLowerCase().includes('@gmail.com')) {
+      fromEmail = 'newsletter@klebsuchan.com.br';
+    }
+
+    const domain = fromEmail;
     const baseUrl = req.headers.origin || process.env.APP_URL || 'https://klebsuchan.com.br';
+
+    // Lógica para anexar imagem se for um arquivo local
+    let attachments: any[] = [];
+    let imageSrc = postImage;
+
+    if (postImage && !postImage.startsWith('http')) {
+      const imagePath = path.join(process.cwd(), 'public', postImage);
+      if (fs.existsSync(imagePath)) {
+        const imageBuffer = fs.readFileSync(imagePath);
+        attachments = [{
+          content: imageBuffer.toString('base64'),
+          filename: postImage,
+          contentId: 'post-image-cid'
+        }];
+        imageSrc = 'cid:post-image-cid';
+      }
+    }
     
     const htmlContent = `
 <!DOCTYPE html>
@@ -399,9 +441,9 @@ app.post("/api/notify-new-post", async (req, res) => {
         <tr>
           <td>
             <div class="card">
-              ${postImage ? `
+              ${imageSrc ? `
               <div class="card-img-container">
-                <img src="${postImage}" alt="Capa do artigo" class="card-img" />
+                <img src="${imageSrc}" alt="Capa do artigo" class="card-img" />
               </div>
               ` : ''}
               <div class="card-content">
@@ -437,8 +479,9 @@ app.post("/api/notify-new-post", async (req, res) => {
       const emailsList = emailsToSend.map(email => ({
         from: `Klebsuchan Newsletter <${domain}>`,
         to: email,
-        subject: "Post Novo na Taverna Klebsuchan! 🎮",
-        html: htmlContent
+        subject: `Novo Artigo: ${postTitle}`,
+        html: htmlContent,
+        attachments: attachments
       }));
 
       try {

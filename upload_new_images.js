@@ -24,7 +24,7 @@ async function uploadFile(filePath, bucket, destPath) {
 }
 
 async function main() {
-  await uploadFile('./achar-temas/michael-jackson.jpg', 'images', 'michael-jackson.jpg');
+  await uploadFile(path.join(process.cwd(), 'public', 'artigomk.png'), 'images', 'artigomk.png');
 }
 
 main();
