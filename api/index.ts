@@ -376,20 +376,37 @@ app.post("/api/notify-new-post", async (req, res) => {
     const domain = fromEmail;
     const baseUrl = req.headers.origin || process.env.APP_URL || 'https://klebsuchan.com.br';
 
-    // Lógica para anexar imagem se for um arquivo local
+    // Lógica para anexar imagem se for um arquivo local ou URL
     let attachments: any[] = [];
     let imageSrc = postImage;
 
-    if (postImage && !postImage.startsWith('http')) {
-      const imagePath = path.join(process.cwd(), 'public', postImage);
-      if (fs.existsSync(imagePath)) {
-        const imageBuffer = fs.readFileSync(imagePath);
-        attachments = [{
-          content: imageBuffer.toString('base64'),
-          filename: postImage,
-          contentId: 'post-image-cid'
-        }];
-        imageSrc = 'cid:post-image-cid';
+    if (postImage) {
+      try {
+        if (postImage.startsWith('http')) {
+          const imgRes = await fetch(postImage);
+          const arrayBuffer = await imgRes.arrayBuffer();
+          const buffer = Buffer.from(arrayBuffer);
+          const filename = postImage.split('/').pop() || 'image.png';
+          attachments = [{
+            content: buffer.toString('base64'),
+            filename: filename,
+            contentId: 'post-image-cid'
+          }];
+          imageSrc = 'cid:post-image-cid';
+        } else {
+          const imagePath = path.join(process.cwd(), 'public', postImage);
+          if (fs.existsSync(imagePath)) {
+            const imageBuffer = fs.readFileSync(imagePath);
+            attachments = [{
+              content: imageBuffer.toString('base64'),
+              filename: postImage,
+              contentId: 'post-image-cid'
+            }];
+            imageSrc = 'cid:post-image-cid';
+          }
+        }
+      } catch (err) {
+        console.error("Erro ao tentar anexar a imagem:", err);
       }
     }
     

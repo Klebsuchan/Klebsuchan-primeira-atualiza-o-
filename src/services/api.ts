@@ -78,7 +78,9 @@ export async function fetchAllPostsData(): Promise<Post[]> {
   }
   
   // Custom sorting to ensure the newest posts (by date or id) appear first
-  cachedPostsData = cachedPostsData!.sort((a, b) => {
+  cachedPostsData = cachedPostsData!
+    .filter(post => new Date(post.date).getTime() <= new Date().getTime())
+    .sort((a, b) => {
     return new Date(b.date).getTime() - new Date(a.date).getTime();
   });
   
