@@ -330,10 +330,8 @@ app.post("/api/notify-new-post", async (req, res) => {
       emailsToSend = ["braian.kleber.camargo@gmail.com"];
     }
 
-    emailsToSend = emailsToSend.filter(e => e.toLowerCase() === 'braian.kleber.camargo@gmail.com');
-
     if (emailsToSend.length === 0) {
-      return res.status(200).json({ success: true, message: "Aviso: Nenhum email autorizado para envio no momento. Inscritos estão salvos no Supabase." });
+      return res.status(200).json({ success: true, message: "Aviso: Nenhum email para envio no momento." });
     }
 
     const domain = process.env.RESEND_DOMAIN || 'onboarding@resend.dev';
