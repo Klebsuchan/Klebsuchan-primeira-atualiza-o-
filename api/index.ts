@@ -392,11 +392,11 @@ app.post("/api/notify-new-post", async (req, res) => {
           filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
           
           attachments = [{
-            content: buffer,
             filename: filename,
-            contentId: 'post-image-cid'
+            content: buffer,
+            contentId: 'postimagecid'
           }];
-          imageSrc = 'cid:post-image-cid';
+          imageSrc = 'cid:postimagecid';
         } else {
           const imagePath = path.join(process.cwd(), 'public', postImage);
           if (fs.existsSync(imagePath)) {
@@ -406,11 +406,11 @@ app.post("/api/notify-new-post", async (req, res) => {
             filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
             
             attachments = [{
-              content: imageBuffer,
               filename: filename,
-              contentId: 'post-image-cid'
+              content: imageBuffer,
+              contentId: 'postimagecid'
             }];
-            imageSrc = 'cid:post-image-cid';
+            imageSrc = 'cid:postimagecid';
           }
         }
       } catch (err) {
@@ -511,12 +511,9 @@ app.post("/api/notify-new-post", async (req, res) => {
       }));
 
       try {
-        const { error } = await resend.batch.send(emailsList.slice(0, 100));
-        if (error) {
-          console.error("Resend Batch Error:", error);
-        }
+        await Promise.all(emailsList.slice(0, 100).map(emailData => resend.emails.send(emailData)));
       } catch (emailError) {
-        console.error("Falha ao chamar a Resend batch (ignorado):", emailError);
+        console.error("Falha ao chamar a Resend (ignorado):", emailError);
       }
 
     return res.status(200).json({ success: true, message: "Inscritos notificados com sucesso!" });
