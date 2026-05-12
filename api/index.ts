@@ -5,6 +5,7 @@ import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
 import { createClient } from "@supabase/supabase-js";
+import sharp from "sharp";
 
 export const app = express();
 app.use(express.json());
@@ -318,7 +319,7 @@ app.post("/api/subscribe", async (req, res) => {
 // Rota API para notificar todos os inscritos sobre um novo artigo
 app.post("/api/notify-new-post", async (req, res) => {
   try {
-    const { postId, postTitle, postExcerpt, postImage } = req.body;
+    const { postId, postTitle, postExcerpt, postImage, scheduledAt } = req.body;
     
     if (!postId || !postTitle) {
       return res.status(400).json({ error: "Dados do post incompletos (postId e postTitle são obrigatórios)" });
@@ -385,10 +386,13 @@ app.post("/api/notify-new-post", async (req, res) => {
         if (postImage.startsWith('http')) {
           const imgRes = await fetch(postImage);
           const arrayBuffer = await imgRes.arrayBuffer();
-          const buffer = Buffer.from(arrayBuffer);
-          const filename = postImage.split('/').pop() || 'image.png';
+          let buffer = Buffer.from(arrayBuffer);
+          buffer = await sharp(buffer).jpeg({ quality: 80 }).toBuffer();
+          let filename = postImage.split('/').pop() || 'image.jpg';
+          filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
+          
           attachments = [{
-            content: buffer.toString('base64'),
+            content: buffer,
             filename: filename,
             contentId: 'post-image-cid'
           }];
@@ -396,10 +400,14 @@ app.post("/api/notify-new-post", async (req, res) => {
         } else {
           const imagePath = path.join(process.cwd(), 'public', postImage);
           if (fs.existsSync(imagePath)) {
-            const imageBuffer = fs.readFileSync(imagePath);
+            let imageBuffer = fs.readFileSync(imagePath);
+            imageBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
+            let filename = postImage.split('/').pop() || 'image.jpg';
+            filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
+            
             attachments = [{
-              content: imageBuffer.toString('base64'),
-              filename: postImage,
+              content: imageBuffer,
+              filename: filename,
               contentId: 'post-image-cid'
             }];
             imageSrc = 'cid:post-image-cid';
@@ -498,7 +506,8 @@ app.post("/api/notify-new-post", async (req, res) => {
         to: email,
         subject: `Novo Artigo: ${postTitle}`,
         html: htmlContent,
-        attachments: attachments
+        attachments: attachments,
+        scheduledAt: scheduledAt ? scheduledAt : undefined
       }));
 
       try {
