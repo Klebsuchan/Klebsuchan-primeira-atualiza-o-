@@ -378,17 +378,96 @@ app.post("/api/notify-new-post", async (req, res) => {
     const baseUrl = req.headers.origin || process.env.APP_URL || 'https://klebsuchan.com.br';
 
     // Lógica para anexar imagem se for um arquivo local ou URL
-    let attachments: any[] = [];
-    let imageSrc = postImage;
+        // Lógica para anexar imagem se for um arquivo local ou URL
+    let finalPostImage = postImage;
 
-    if (postImage) {
+    if (!finalPostImage) {
+      // Find the post from posts.json to get fallback image
       try {
-        if (postImage.startsWith('http')) {
-          const imgRes = await fetch(postImage);
+        const cwd = process.cwd();
+        const possiblePaths = [
+          path.join(cwd, 'src', 'data', 'posts.json'),
+          path.join(cwd, '..', 'src', 'data', 'posts.json'),
+          path.join('/tmp', 'posts.json')
+        ];
+        
+        let postsData = null;
+        for (const p of possiblePaths) {
+          if (fs.existsSync(p)) {
+            postsData = fs.readFileSync(p, 'utf8');
+            break;
+          }
+        }
+        
+        if (postsData) {
+          const posts = JSON.parse(postsData);
+          const currentPost = posts.find((p) => p.id === postId);
+          if (currentPost) {
+            if (currentPost.imageUrl) {
+              finalPostImage = currentPost.imageUrl;
+            } else if (currentPost.id === 0) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/naruto.avif?v=1";
+            } else if (currentPost.id === 2) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/one-piece.jpg?v=1";
+            } else if (currentPost.id === 8) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/kimetsu-no-yaba.png?v=1";
+            } else if (currentPost.id === 17) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/tokyo-ghoul.jpg?v=1";
+            } else if (currentPost.categories && currentPost.categories.includes(101)) {
+              const animeImages = [
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573270628.webp",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573271893.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573272900.webp",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573274391.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573275387.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573275920.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573276503.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573277135.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573279074.webp",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573280472.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573281014.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573281646.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573282233.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573282629.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573283580.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573284563.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573284856.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573285242.webp",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573286670.png",
+                "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/regenerated_image_1777573287173.png"
+              ];
+              finalPostImage = animeImages[(currentPost.id) % animeImages.length];
+            } else if (currentPost.categories && currentPost.categories.includes(103)) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/mario.jpg?v=1";
+            } else if (currentPost.categories && currentPost.categories.includes(105)) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/marvel.jpeg?v=2";
+            } else if (currentPost.categories && currentPost.categories.includes(107)) {
+              finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/tech_robotica.jpg?v=3";
+            } else if (currentPost.yoast_head_json?.og_image?.[0]?.url) {
+              finalPostImage = currentPost.yoast_head_json.og_image[0].url;
+            }
+          }
+        }
+      } catch (e) {
+        console.error("Error fetching fallback image for email:", e);
+      }
+    }
+
+    if (!finalPostImage) {
+        finalPostImage = "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1";
+    }
+
+    let attachments: any[] = [];
+    let imageSrc = finalPostImage;
+
+    if (finalPostImage) {
+      try {
+        if (finalPostImage.startsWith('http')) {
+          const imgRes = await fetch(finalPostImage);
           const arrayBuffer = await imgRes.arrayBuffer();
           let buffer = Buffer.from(arrayBuffer);
           buffer = await sharp(buffer).jpeg({ quality: 80 }).toBuffer();
-          let filename = postImage.split('/').pop() || 'image.jpg';
+          let filename = finalPostImage.split('/').pop() || 'image.jpg';
           filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
           
           attachments = [{
@@ -398,11 +477,11 @@ app.post("/api/notify-new-post", async (req, res) => {
           }];
           imageSrc = 'cid:postimagecid';
         } else {
-          const imagePath = path.join(process.cwd(), 'public', postImage);
+          const imagePath = path.join(process.cwd(), 'public', finalPostImage);
           if (fs.existsSync(imagePath)) {
             let imageBuffer = fs.readFileSync(imagePath);
             imageBuffer = await sharp(imageBuffer).jpeg({ quality: 80 }).toBuffer();
-            let filename = postImage.split('/').pop() || 'image.jpg';
+            let filename = finalPostImage.split('/').pop() || 'image.jpg';
             filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
             
             attachments = [{
@@ -411,13 +490,18 @@ app.post("/api/notify-new-post", async (req, res) => {
               contentId: 'postimagecid'
             }];
             imageSrc = 'cid:postimagecid';
+          } else {
+            imageSrc = `https://klebsuchan.com.br${finalPostImage.startsWith('/') ? '' : '/'}${finalPostImage}`;
           }
         }
       } catch (err) {
         console.error("Erro ao tentar anexar a imagem:", err);
+        if (!finalPostImage.startsWith('http')) {
+            imageSrc = `https://klebsuchan.com.br${finalPostImage.startsWith('/') ? '' : '/'}${finalPostImage}`;
+        }
       }
     }
-    
+
     const htmlContent = `
 <!DOCTYPE html>
 <html>
