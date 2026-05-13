@@ -279,6 +279,8 @@ export default function App() {
   const defaultImages = [];
 
   const getPostImage = (post: Post) => {
+    if (post.imageUrl) return post.imageUrl;
+
     if (post.id === 0) {
         return "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/naruto.avif?v=1";
     }
@@ -313,8 +315,6 @@ export default function App() {
     if (post.categories?.includes(107) && techImages[post.id]) {
         return techImages[post.id];
     }
-
-    if (post.imageUrl) return post.imageUrl;
 
     if (post.yoast_head_json?.og_image?.[0]?.url) {
       return post.yoast_head_json.og_image[0].url;
