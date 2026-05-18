@@ -565,6 +565,37 @@ export default function App() {
                       </div>
                     </div>
                   ))}
+
+                  <div 
+                    className="group relative overflow-hidden rounded-xl border border-highlight/50 bg-gradient-to-br from-[#121214] to-[#202024] cursor-default h-40 flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:border-highlight transition-colors"
+                  >
+                    <div className="shrink-0 bg-white p-1 rounded-xl shadow-lg">
+                      <img 
+                        src="/images/qrcodepix.jpeg" 
+                        alt="QR Code PIX" 
+                        className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
+                      />
+                    </div>
+                    <div className="flex flex-col flex-1 justify-center z-10 relative">
+                      <h3 className="text-highlight text-sm sm:text-base font-serif font-black uppercase tracking-wide mb-1">
+                        Apoie nosso Trabalho!
+                      </h3>
+                      <p className="text-[10px] sm:text-xs text-text-muted mb-2 leading-tight">
+                        Qualquer doação é mais um apoio para trazermos conteúdo de qualidade.
+                      </p>
+                      <button 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigator.clipboard.writeText('b0f51ae0-be9f-4b87-9da4-0ca63dd8ccbb');
+                          alert('Chave PIX copiada: b0f51ae0-be9f-4b87-9da4-0ca63dd8ccbb');
+                        }}
+                        className="text-[10px] sm:text-xs bg-highlight/10 text-highlight hover:bg-highlight hover:text-black px-2 py-1.5 rounded font-bold uppercase transition-colors self-start border border-highlight/30 flex items-center gap-1"
+                        title="Copiar chave PIX"
+                      >
+                        Copiar Chave
+                      </button>
+                    </div>
+                  </div>
                 </div>
               </section>
 
