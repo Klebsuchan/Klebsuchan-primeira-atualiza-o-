@@ -1,20 +1,39 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# Klebsuchan
 
-# Run and deploy your AI Studio app
+Bem-vindo ao repositório do **Klebsuchan**, o seu blog definitivo de cultura pop, animes, tecnologia, jogos e mundo geek! Criado por Kleber, este espaço é dedicado a opiniões fortes, reviews insanas (com e sem spoilers) e as últimas novidades do universo nerd.
 
-This contains everything you need to run your app locally.
+## Tecnologias Utilizadas
 
-View your app in AI Studio: https://ai.studio/apps/67bd00ad-8f4e-4cb8-b01f-193516cbaebe
+Este projeto foi construído com as seguintes tecnologias:
 
-## Run Locally
+*   **React** (Vite)
+*   **TypeScript**
+*   **Tailwind CSS** (Estilização)
+*   **Lucide React** (Ícones)
+*   **Resend API** (Para envio de e-mails para os inscritos da guilda)
+*   **Node.js / Express** (Para rotas de API server-side)
 
-**Prerequisites:**  Node.js
+## Rodando o Projeto Localmente
 
+**Pré-requisitos:** Node.js instalado.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+1. Instale as dependências executando:
+   ```bash
+   npm install
+   ```
+
+2. Crie um arquivo `.env` na raiz do projeto baseado no `.env.example` (se disponível) ou configure as seguintes variáveis:
+   ```env
+   VITE_RESEND_API_KEY="sua_chave_aqui"
+   ```
+
+3. Inicie o servidor de desenvolvimento:
+   ```bash
+   npm run dev
+   ```
+
+4. Acesse a aplicação no seu navegador padrão (geralmente em `http://localhost:3000`).
+
+## Sobre o Autor
+
+**Kleber** é um apaixonado por cultura otaku, jogos retrô e lançamentos apocalípticos. Trazendo sempre análises com o toque "Klebsuchan" de sinceridade.
