@@ -368,10 +368,50 @@ export default function App() {
     setTimeout(() => setNewsletterStatus('idle'), 5000);
   };
 
+  const generateKeywords = (post?: Post | null) => {
+    let baseKeywords = "Klebsuchan, blog nerd, cultura pop, geek, tecnologia, animes, doramas, games, jogos, reviews, filmes";
+    if (!post) return baseKeywords;
+    const title = post.title.rendered.toLowerCase();
+    
+    if (title.includes('the boys')) {
+      baseKeywords += ", Final The Boys, review final the boys, The Boys temporada 5, Capitão Pátria morreu, final em quadrinhos The Boys, HQ vs Série";
+    }
+    if (title.includes('anime') || title.includes('2026')) {
+      baseKeywords += ", animes de 2026, melhores animes do ano, lançamentos animes 2026, recomendações de animes";
+    }
+    if (title.includes('rock')) {
+       baseKeywords += ", bandas de rock desconhecidas, recomendação musical";
+    }
+    if (title.includes('mortal kombat')) {
+       baseKeywords += ", mortal kombat 2 filme, elenco mortal kombat, vazamento mortal kombat";
+    }
+
+    const titleWords = title.replace(/<[^>]+>/g, '').replace(/[^\w\s]/g, '').split(' ').filter(w => w.length > 3).join(', ');
+    return `${titleWords}, ${baseKeywords}`;
+  };
+
+  const getStructuredData = (post: Post) => {
+    return {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      "headline": post.title.rendered.replace(/<[^>]+>/g, ''),
+      "description": post.excerpt?.rendered ? post.excerpt.rendered.replace(/<[^>]+>/g, '') : '',
+      "image": getPostImage(post) ? [window.location.origin + getPostImage(post)] : [],
+      "datePublished": post.date,
+      "dateModified": post.date,
+      "author": [{
+          "@type": "Person",
+          "name": "Kleber"
+      }]
+    };
+  };
+
   return (
     <div className="flex flex-col min-h-screen w-full bg-bg text-accent font-sans relative">
       <Helmet>
         <title>{selectedPost ? `${selectedPost.title.rendered.replace(/<[^>]+>/g, '')} | Klebsuchan` : activeTab === 'quem-somos' ? 'Quem Somos | Klebsuchan' : 'Klebsuchan | Hub de Cultura Otaku, Nerd e Geek'}</title>
+        <meta name="description" content={selectedPost ? selectedPost.excerpt?.rendered.replace(/<[^>]+>/g, '') : "O seu hub definitivo de cultura nerd, otaku, gadas e reviews de doramas e animes."} />
+        <meta name="keywords" content={generateKeywords(selectedPost)} />
         {selectedPost && (
           <meta property="og:title" content={selectedPost.title.rendered.replace(/<[^>]+>/g, '')} />
         )}
@@ -380,6 +420,11 @@ export default function App() {
         )}
         {selectedPost && getPostImage(selectedPost) && (
           <meta property="og:image" content={getPostImage(selectedPost)} />
+        )}
+        {selectedPost && (
+          <script type="application/ld+json">
+            {JSON.stringify(getStructuredData(selectedPost))}
+          </script>
         )}
       </Helmet>
 
