@@ -412,9 +412,10 @@ export default function App() {
   return (
     <div className="flex flex-col min-h-screen w-full bg-bg text-accent font-sans relative">
       <Helmet>
-        <title>{selectedPost ? `${selectedPost.title.rendered.replace(/<[^>]+>/g, '')} | Klebsuchan` : activeTab === 'quem-somos' ? 'Quem Somos | Klebsuchan' : 'Klebsuchan | Hub de Cultura Otaku, Nerd e Geek'}</title>
-        <meta name="description" content={selectedPost ? selectedPost.excerpt?.rendered.replace(/<[^>]+>/g, '') : "O seu hub definitivo de cultura nerd, otaku, gadas e reviews de doramas e animes."} />
+        <title>{selectedPost ? `${selectedPost.title.rendered.replace(/<[^>]+>/g, '')} | Klebsuchan` : activeTab === 'quem-somos' ? 'Quem Somos | Klebsuchan' : 'Klebsuchan | Blog de Cultura Otaku, Nerd, Geek e Animes'}</title>
+        <meta name="description" content={selectedPost ? selectedPost.excerpt?.rendered.replace(/<[^>]+>/g, '') : "Klebsuchan: O maior hub e blog de cultura nerd, otaku, geek, animes, games e tecnologia. Fique por dentro de todas as novidades."} />
         <meta name="keywords" content={generateKeywords(selectedPost)} />
+        <link rel="canonical" href={selectedPost ? `https://klebsuchan.com.br/?post=${selectedPost.id}` : `https://klebsuchan.com.br/`} />
         {selectedPost && (
           <meta property="og:title" content={selectedPost.title.rendered.replace(/<[^>]+>/g, '')} />
         )}
@@ -423,6 +424,14 @@ export default function App() {
         )}
         {selectedPost && getPostImage(selectedPost) && (
           <meta property="og:image" content={getPostImage(selectedPost)} />
+        )}
+        <meta property="og:type" content={selectedPost ? "article" : "website"} />
+        <meta property="og:url" content={selectedPost ? `https://klebsuchan.com.br/?post=${selectedPost.id}` : `https://klebsuchan.com.br/`} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={selectedPost ? selectedPost.title.rendered.replace(/<[^>]+>/g, '') : 'Klebsuchan | Hub de Cultura Otaku, Nerd e Geek'} />
+        <meta name="twitter:description" content={selectedPost ? selectedPost.excerpt?.rendered.replace(/<[^>]+>/g, '') : 'Klebsuchan: O maior hub e blog de cultura nerd, otaku, geek e animes.'} />
+        {selectedPost && getPostImage(selectedPost) && (
+          <meta name="twitter:image" content={getPostImage(selectedPost)} />
         )}
         {selectedPost && (
           <script type="application/ld+json">
