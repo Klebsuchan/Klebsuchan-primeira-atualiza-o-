@@ -3,6 +3,9 @@
   "functions": {
     "api/index.ts": {
       "includeFiles": "src/data/posts.json"
+    },
+    "api/render.ts": {
+      "includeFiles": "src/data/posts.json"
     }
   },
   "rewrites": [
@@ -12,7 +15,7 @@
     },
     {
       "source": "/(.*)",
-      "destination": "/index.html"
+      "destination": "/api/render.ts"
     }
   ],
   "env": {

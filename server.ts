@@ -73,6 +73,14 @@ async function startServer() {
     </script>
             `;
             html = html.replace('</head>', `${scriptJsonLd}\n  </head>`);
+
+            const seoContent = `
+              <article style="position: absolute; opacity: 0; pointer-events: none;">
+                <h1>${title}</h1>
+                ${post.content?.rendered || ''}
+              </article>
+            `;
+            html = html.replace('<div id="root"></div>', `<div id="root">${seoContent}</div>`);
           }
         } catch (err) {
           console.error("Erro ao injetar meta tags:", err);

@@ -664,10 +664,16 @@ export default function App() {
                 
                 <div className="flex flex-col gap-4">
                   {homePosts.slice(0, 4).map((post, index) => (
-                    <div 
+                    <a 
                       key={post.id} 
-                      onClick={() => { setSelectedPost(post); setActiveTab('posts'); }}
-                      className="group flex gap-4 cursor-pointer bg-card-bg p-3 rounded-lg border border-border hover:border-highlight transition-colors"
+                      href={`/?post=${post.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        window.history.pushState({}, '', `/?post=${post.id}`);
+                        setSelectedPost(post);
+                        setActiveTab('posts');
+                      }}
+                      className="group flex gap-4 cursor-pointer bg-card-bg p-3 rounded-lg border border-border hover:border-highlight transition-colors block"
                     >
                       <div className="w-24 h-24 shrink-0 rounded overflow-hidden">
                          <img 
@@ -688,7 +694,7 @@ export default function App() {
                           dangerouslySetInnerHTML={{ __html: post.title.rendered }}
                         />
                       </div>
-                    </div>
+                    </a>
                   ))}
                 </div>
                 
@@ -825,13 +831,16 @@ export default function App() {
                       .filter(p => p.id !== selectedPost.id && p.categories.some(c => selectedPost.categories.includes(c)))
                       .slice(0, 2)
                       .map(relatedPost => (
-                        <div 
+                        <a 
                           key={relatedPost.id} 
-                          onClick={() => {
+                          href={`/?post=${relatedPost.id}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            window.history.pushState({}, '', `/?post=${relatedPost.id}`);
                             setSelectedPost(relatedPost);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
-                          className="bg-bg border border-border rounded-lg overflow-hidden cursor-pointer group hover:border-highlight transition-colors flex flex-col"
+                          className="bg-bg border border-border rounded-lg overflow-hidden cursor-pointer group hover:border-highlight transition-colors flex flex-col block"
                         >
                           {getPostImage(relatedPost) && (
                             <div className="w-full h-40 overflow-hidden bg-bg relative">
@@ -856,7 +865,7 @@ export default function App() {
                               <ArrowLeft size={14} className="text-highlight rotate-180 transform group-hover:translate-x-1 transition-transform" />
                             </div>
                           </div>
-                        </div>
+                        </a>
                       ))
                     }
                   </div>
@@ -886,10 +895,15 @@ export default function App() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {posts.map((post, index) => {
                       return (
-                      <div 
+                      <a 
                         key={post.id} 
-                        onClick={() => setSelectedPost(post)}
-                        className="bg-card-bg border border-border cursor-pointer group hover:border-highlight transition-colors flex flex-col h-full overflow-hidden relative"
+                        href={`/?post=${post.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          window.history.pushState({}, '', `/?post=${post.id}`);
+                          setSelectedPost(post);
+                        }}
+                        className="bg-card-bg border border-border cursor-pointer group hover:border-highlight transition-colors flex flex-col h-full overflow-hidden relative block"
                       >
                         {getPostImage(post) && (
                           <div className="w-full h-56 overflow-hidden bg-bg relative">
@@ -925,7 +939,7 @@ export default function App() {
                             <ArrowLeft size={14} className="text-highlight rotate-180 transform group-hover:translate-x-1 transition-transform" />
                           </div>
                         </div>
-                      </div>
+                      </a>
                     )})}
                   </div>
                 ) : (
