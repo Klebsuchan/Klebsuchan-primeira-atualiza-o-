@@ -376,8 +376,11 @@ export default function App() {
     if (title.includes('the boys')) {
       baseKeywords += ", Final The Boys, review final the boys, The Boys temporada 5, Capitão Pátria morreu, final em quadrinhos The Boys, HQ vs Série";
     }
-    if (title.includes('anime') || title.includes('2026')) {
-      baseKeywords += ", animes de 2026, melhores animes do ano, lançamentos animes 2026, recomendações de animes";
+    if (title.includes('mandaloriano') || title.includes('star wars') || title.includes('grogu') || title.includes('kojima')) {
+      baseKeywords += ", o mandaloriano e grogu, filme do mandaloriano, hideo kojima review mandaloriano, star wars 2026, baby yoda, jon favreau";
+    }
+    if (title.includes('anime') || title.includes('2026') || title.includes('crunchyroll') || title.includes('my hero academia') || title.includes('charles emmanuel')) {
+      baseKeywords += ", animes de 2026, melhores animes do ano, lançamentos animes 2026, crunchyroll anime awards 2026, my hero academia anime do ano, charles emmanuel akaza dublagem, solo leveling, deamon slayer castelo infinito, gachiakuta";
     }
     if (title.includes('rock')) {
        baseKeywords += ", bandas de rock desconhecidas, recomendação musical";
