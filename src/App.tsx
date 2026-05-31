@@ -793,16 +793,21 @@ export default function App() {
                 />
                 
                 {getPostImage(selectedPost) && (
-                  <img 
-                    src={getPostImage(selectedPost)} 
-                    alt="Featured" 
-                    fetchPriority="high"
-                    loading="eager"
-                    width="800"
-                    height="500"
-                    referrerPolicy="no-referrer"
-                    className="w-full h-auto max-h-[500px] object-cover object-center mb-6 border border-border"
-                  />
+                  <div className="mb-6">
+                    <img 
+                      src={getPostImage(selectedPost)} 
+                      alt="Featured" 
+                      fetchPriority="high"
+                      loading="eager"
+                      width="800"
+                      height="500"
+                      referrerPolicy="no-referrer"
+                      className="w-full h-auto max-h-[500px] object-cover object-center border border-border"
+                    />
+                    <div className="text-right text-[10px] sm:text-[11px] text-muted mt-2 italic">
+                      Imagem: Reprodução / Divulgação
+                    </div>
+                  </div>
                 )}
 
                 <div className="flex items-center gap-4 mb-8 pb-6 border-b border-border">
@@ -1088,6 +1093,10 @@ export default function App() {
                 <p>Coletamos dados analíticos básicos essenciais (como páginas visitadas e tempo de permanência) para aprimorar o conteúdo de acordo com as preferências da nossa audiência geek/otaku.</p>
                 <p>Caso você se inscreva em nossa newsletter ou acesse mediante login com o Google, coletaremos apenas as informações estritamente necessárias (como e-mail ou nome) para prestar o serviço e permitir comentários nas publicações.</p>
                 <p>Não vendemos, trocamos ou transferimos a terceiros suas informações pessoais identificáveis. Isso não inclui terceiros de confiança que nos auxiliam a operar o nosso site, desde que as partes concordem em manter essas informações confidenciais.</p>
+                <p><strong>Publicidade de Terceiros e Google AdSense</strong></p>
+                <p>O Google, como fornecedor de terceiros, utiliza cookies para exibir anúncios no nosso site. O uso do cookie publicitário pelo Google (incluindo o DART) permite a veiculação de anúncios para os nossos usuários com base na visita a este site e a outros sites na Internet.</p>
+                <p>Fornecedores de terceiros, incluindo o Google (Google AdSense), usam cookies para veicular anúncios com base nas visitas anteriores do usuário ao nosso website ou a outros websites. O uso de cookies de publicidade pelo Google permite que ele e seus parceiros veiculem anúncios para os nossos usuários com base em suas visitas aos nossos sites e/ou a outros sites na Internet.</p>
+                <p>Os usuários podem desativar a publicidade personalizada acessando as <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-highlight hover:underline">Configurações de Anúncios do Google</a>. Como alternativa, nossos leitores podem desativar o uso de cookies de publicidade de terceiros para o fornecimento de publicidade personalizada, acessando o site <a href="http://www.aboutads.info" target="_blank" rel="noopener noreferrer" className="text-highlight hover:underline">www.aboutads.info</a>.</p>
                 <p>Ao navegar pelo portal e interagir com os botões, você concorda ativamente com essa Política.</p>
               </div>
             </div>
@@ -1104,9 +1113,10 @@ export default function App() {
                 <ul className="list-disc list-inside ml-4 space-y-2 text-sm text-muted">
                   <li><strong>Cookies Essenciais:</strong> Necessários para o funcionamento correto do site (ex: manter sua sessão ativa para comentários).</li>
                   <li><strong>Cookies Analíticos:</strong> Servem para entender de forma agregada quais postagens e reviews estão fazendo mais sucesso, permitindo melhorar nossa curadoria.</li>
+                  <li><strong>Cookies de Publicidade (Google AdSense):</strong> Fornecedores de terceiros, incluindo o Google (Google AdSense), usam cookies para veicular anúncios com base nas visitas anteriores do usuário ao nosso website ou a outros websites, com base em suas visitas aos nossos sites ou a outros sites na Internet.</li>
                 </ul>
                 <p>Além disso, destacamos o uso de cookies através da integração da Loja da Shopee. Se você clicar e for redirecionado, cookies de parceiros podem rastrear essa origem (Afiliados Shopee).</p>
-                <p>Você pode controlar ou desativar o uso de cookies nas configurações do seu próprio navegador. Note que algumas funcionalidades da interface podem não responder como o esperado caso você opte por desativá-los.</p>
+                <p>Você pode controlar ou desativar o uso de cookies nas configurações do seu próprio navegador ou acessar a página de <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-highlight hover:underline">Configurações de Anúncios do Google</a> para desativar a publicidade personalizada. Note que algumas funcionalidades da interface podem não responder como o esperado caso você opte por desativá-los.</p>
               </div>
             </div>
           </section>
