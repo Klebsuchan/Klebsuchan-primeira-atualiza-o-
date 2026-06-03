@@ -4,11 +4,17 @@
         xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
     <loc>https://klebsuchan.com.br/</loc>
-    <lastmod>2026-05-26</lastmod>
+    <lastmod>2026-06-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   
+  <url>
+    <loc>https://klebsuchan.com.br/?post=1780515184237</loc>
+    <lastmod>2026-06-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
   <url>
     <loc>https://klebsuchan.com.br/?post=1779821699902</loc>
     <lastmod>2026-05-26</lastmod>
