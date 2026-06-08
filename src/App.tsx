@@ -645,21 +645,21 @@ export default function App() {
               <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/95 via-black/90 to-[#070707]/95 md:bg-gradient-to-r md:from-[#030303] md:via-black/90 md:to-black/30 pointer-events-none"></div>
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#070707] to-transparent pointer-events-none md:hidden"></div>
               
-              <div className="relative z-10 p-5 xs:p-8 sm:p-12 lg:p-16 flex flex-col items-start gap-4 sm:gap-6 max-w-2xl lg:max-w-3xl flex-1">
-                <div className="inline-flex items-center gap-2 bg-highlight/20 border border-highlight text-highlight px-3 py-1 rounded-full text-[10px] xs:text-xs font-bold uppercase tracking-widest">
+              <div className="relative z-10 p-6 sm:p-12 lg:p-16 flex flex-col items-start gap-4 sm:gap-6 max-w-2xl lg:max-w-3xl flex-1">
+                <div className="inline-flex items-center gap-2 bg-highlight/20 border border-highlight text-highlight px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
                   <span className="w-2 h-2 rounded-full bg-highlight animate-pulse"></span>
                   Loot Drop Disponível
                 </div>
                 
-                <h1 className="font-serif text-[1.65rem] xs:text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-[1.15] sm:leading-tight uppercase tracking-tighter">
-                  O Multiverso <br className="hidden xs:inline" />
+                <h1 className="font-serif text-3xl sm:text-5xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tighter">
+                  O Multiverso <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-highlight to-[#f6c15c]">
                     Nerd e Otaku
-                  </span> <br className="hidden xs:inline" />
+                  </span> <br />
                   Em Um Só Lugar.
                 </h1>
                 
-                <p className="text-xs xs:text-sm sm:text-lg text-gray-300 max-w-xl leading-relaxed opacity-95">
+                <p className="text-sm sm:text-lg text-gray-300 max-w-xl leading-relaxed opacity-95">
                   Aperte o start e mergulhe em análises profundas, reviews épicos, novidades do eSports, memes de outro mundo e o melhor da cultura pop. Não jogue sozinho, seja bem-vindo ao Klebsuchan!
                 </p>
                 
@@ -668,17 +668,17 @@ export default function App() {
                     const gamesGroup = categoryGroups.find(g => g.title === 'Games & eSports');
                     if(gamesGroup) handleCategoryClick(gamesGroup);
                   }}
-                  className="mt-2 sm:mt-4 w-full xs:w-auto justify-center px-6 py-3.5 sm:px-8 sm:py-4 bg-highlight hover:bg-[#77150a] text-white font-bold uppercase tracking-wider text-xs sm:text-sm lg:text-base border-b-4 border-[#4d0c04] active:border-b-0 active:translate-y-1 transition-all flex items-center gap-3 shadow-[0_0_25px_rgba(240,151,11,0.45)] select-none cursor-pointer"
+                  className="mt-3 sm:mt-4 w-full sm:w-auto justify-center px-6 py-3.5 sm:px-8 sm:py-4 bg-highlight hover:bg-[#77150a] text-white font-bold uppercase tracking-wider text-sm lg:text-base border-b-4 border-[#4d0c04] active:border-b-0 active:translate-y-1 transition-all flex items-center gap-3 shadow-[0_0_25px_rgba(240,151,11,0.45)] select-none cursor-pointer"
                 >
                   <span className="animate-bounce font-mono text-lg sm:text-xl">▶</span> PRESS START
                 </button>
               </div>
 
               {/* SLIDESHOW DE IMAGENS COM BLUR E ALTERNÂNCIA (VINCULADAS AOS POSTS) - RENDERIZADO COM EXCELÊNCIA EM TODOS OS TAMANHOS */}
-              <div className="flex relative z-10 w-full md:w-[42%] lg:w-[38%] px-5 sm:px-8 md:px-0 md:mr-8 lg:mr-12 xl:mr-16 h-[250px] xs:h-[280px] md:h-[320px] flex-col items-center justify-center p-2 select-none mx-auto max-w-sm md:max-w-none mt-2 md:mt-0 mb-6 md:mb-0">
+              <div className="flex relative z-10 w-full md:w-[42%] lg:w-[38%] px-6 sm:px-8 md:px-0 md:mr-8 lg:mr-12 xl:mr-16 h-[220px] sm:h-[280px] md:h-[320px] flex-col items-center justify-center p-2 select-none mx-auto max-w-sm md:max-w-none mt-4 md:mt-0 mb-6 md:mb-0">
                 <div 
                   onClick={() => handleHeroSlideClick(heroSlideDetails[currentHeroSlide].img)}
-                  className="group/slide relative cursor-pointer w-full h-[180px] xs:h-[210px] md:h-[240px] rounded-xl overflow-hidden border-2 border-highlight/40 hover:border-highlight transition-all duration-300 shadow-[0_0_30px_rgba(240,151,11,0.15)] hover:shadow-[0_0_50px_rgba(240,151,11,0.35)] hover:-translate-y-0.5 flex items-center justify-center"
+                  className="group/slide relative cursor-pointer w-full h-[190px] sm:h-[210px] md:h-[240px] rounded-xl overflow-hidden border-2 border-highlight/40 hover:border-highlight transition-all duration-300 shadow-[0_0_30px_rgba(240,151,11,0.15)] hover:shadow-[0_0_50px_rgba(240,151,11,0.35)] hover:-translate-y-0.5 flex items-center justify-center"
                 >
                   {/* Blurry mirror layer inside the card to get exact user-focused blur effect style */}
                   <div 
@@ -822,7 +822,8 @@ export default function App() {
                       <div className="w-24 h-24 shrink-0 rounded overflow-hidden">
                          <img 
                             src={getPostImage(post)} 
-                            alt="Thumbnail"
+                            alt={post.title?.rendered.replace(/<[^>]+>/g, '') || "Capa do Artigo"}
+                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
                             fetchPriority={index === 0 ? "high" : "auto"}
                             width="96"
                             height="96"
@@ -995,7 +996,8 @@ export default function App() {
                             <div className="w-full h-40 overflow-hidden bg-bg relative">
                               <img 
                                 src={getPostImage(relatedPost)} 
-                                alt="Thumbnail" 
+                                alt={relatedPost.title?.rendered.replace(/<[^>]+>/g, '') || "Artigo relacionado"} 
+                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
                                 loading="lazy"
                                 decoding="async"
                                 width="400"
@@ -1061,7 +1063,8 @@ export default function App() {
                             </div>
                             <img 
                               src={getPostImage(post)} 
-                              alt="Thumbnail" 
+                              alt={post.title?.rendered.replace(/<[^>]+>/g, '') || "Capa do Artigo"} 
+                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
                               loading={index < 4 ? "eager" : "lazy"}
                               fetchPriority={index < 2 ? "high" : "auto"}
                               referrerPolicy="no-referrer"
