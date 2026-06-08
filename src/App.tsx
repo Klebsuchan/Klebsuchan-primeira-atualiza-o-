@@ -338,6 +338,70 @@ export default function App() {
     }
   }, [activeTab]);
 
+  const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
+  const heroSlideDetails = [
+    { img: '/images/bluelock.webp', title: 'Egoístas, Comemorem! Blue Lock Confirma 3ª Temporada com Visual Insano!' },
+    { img: '/images/veronica.jpg', title: 'A Justiça Foi Feita! Resident Evil Veronica é Oficial para 2027!' },
+    { img: '/images/spidernoir.jpg', title: 'Nicolas Cage quebra o silêncio sobre a 2ª temporada de Spider-Noir' },
+    { img: '/images/mandaloriano.webp', title: 'O Mandaloriano e Grogu nos cinemas com Hideo Kojima!' },
+    { img: '/images/myheroacademia.webp', title: 'My Hero Academia consagrado o Anime do Ano no Awards' },
+    { img: '/images/theboyshq.jpg', title: 'O final chocante de The Boys nos quadrinhos detalhado' },
+    { img: '/images/theboys.webp', title: 'O que esperar do encerramento insano da série The Boys' },
+    { img: '/images/animes2026.jpg', title: 'Guia definitivo de lançamentos imperdíveis de animes em 2026' }
+  ];
+
+  useEffect(() => {
+    if (activeTab === 'inicio') {
+      const timer = setInterval(() => {
+        setCurrentHeroSlide((prev) => (prev + 1) % heroSlideDetails.length);
+      }, 4500);
+      return () => clearInterval(timer);
+    }
+  }, [activeTab]);
+
+  const handleHeroSlideClick = (imgUrl: string) => {
+    const searchName = imgUrl.toLowerCase().split('/').pop()?.split('.')[0] || '';
+    
+    // Find matching post in loaded homePosts
+    let matchingPost = homePosts.find(p => {
+      const pImg = p.imageUrl?.toLowerCase() || '';
+      return pImg.includes(searchName);
+    });
+
+    if (!matchingPost && posts.length > 0) {
+      matchingPost = posts.find(p => {
+        const pImg = p.imageUrl?.toLowerCase() || '';
+        return pImg.includes(searchName);
+      });
+    }
+
+    if (matchingPost) {
+      setSelectedPost(matchingPost);
+      setActiveTab('posts');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      // Fetch fallback directly
+      fetchPosts().then(allPosts => {
+        const found = allPosts.find(p => {
+          const pImg = p.imageUrl?.toLowerCase() || '';
+          return pImg.includes(searchName);
+        });
+        if (found) {
+          setSelectedPost(found);
+          setActiveTab('posts');
+        } else {
+          setActiveTab('posts');
+          setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []});
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }).catch(() => {
+        setActiveTab('posts');
+        setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []});
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  };
+
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newsletterEmail) return;
@@ -545,18 +609,43 @@ export default function App() {
         {activeTab === 'inicio' && (
           <div className="flex flex-col w-full max-w-7xl mx-auto p-6 sm:p-8 lg:p-10 gap-10">
             {/* HERO CTA SECTION */}
-            <section className="relative w-full rounded-2xl overflow-hidden border border-border group bg-black">
-              <div 
-                className="absolute inset-0 transition-transform duration-1000 group-hover:scale-105 opacity-60 mix-blend-screen"
-                style={{
-                  backgroundImage: 'url("https://image.pollinations.ai/prompt/cyberpunk%20neon%20cityscape%20with%20giant%20holographic%20anime%20girl%20and%20arcade%20signs%2C%208k%2C%20hyper-detailed?width=1200&height=600&nologo=true")',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center'
-                }}
-              ></div>
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent"></div>
+            <section className="relative w-full rounded-2xl overflow-hidden border border-border/80 hover:border-highlight/40 group bg-[#070707] flex flex-col md:flex-row items-center justify-between transition-all duration-750 shadow-[0_0_60px_rgba(0,0,0,0.95)] hover:shadow-[0_0_80px_rgba(240,151,11,0.15)]">
+              {/* Seamless Cinematic Cross-Fading Blur background using site images */}
+              {heroSlideDetails.map((slide, idx) => (
+                <div 
+                  key={idx}
+                  className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out blur-[65px] scale-115 pointer-events-none"
+                  style={{
+                    backgroundImage: `url("${slide.img}")`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    opacity: idx === currentHeroSlide ? 0.6 : 0,
+                  }}
+                />
+              ))}
               
-              <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col items-start gap-6 max-w-3xl">
+              {/* Retro-cybernetic grid pattern overlay with dynamic kinetic scroll */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(240,151,11,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(240,151,11,0.02)_1px,transparent_1px)] [background-size:38px_38px] animate-grid-pan pointer-events-none opacity-85"></div>
+              
+              {/* Drifting Glowing Ambient Orbs for multi-layered parallax depth */}
+              <div className="absolute -top-[10%] -left-[5%] w-[450px] h-[450px] animate-drift-slow pointer-events-none">
+                <div className="w-full h-full rounded-full bg-highlight/20 mix-blend-screen animate-glow-pulse" />
+              </div>
+              <div className="absolute -bottom-[15%] left-[20%] w-[500px] h-[500px] animate-drift-medium pointer-events-none">
+                <div className="w-full h-full rounded-full bg-[#f0970b]/15 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-4s' }} />
+              </div>
+              <div className="absolute top-[25%] -right-[5%] w-[380px] h-[380px] animate-drift-slow pointer-events-none">
+                <div className="w-full h-full rounded-full bg-red-500/10 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-8s' }} />
+              </div>
+              
+              {/* Subtle CRT Scanlines overlay */}
+              <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px)] [background-size:100%_4px] pointer-events-none opacity-50"></div>
+
+              {/* Sophisticated dark ambient gradient mask for ultimate caption readability */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#030303] via-black/85 to-[#000000]/30 pointer-events-none"></div>
+              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#070707] to-transparent pointer-events-none md:hidden"></div>
+              
+              <div className="relative z-10 p-8 sm:p-12 lg:p-16 flex flex-col items-start gap-6 max-w-2xl lg:max-w-3xl flex-1">
                 <div className="inline-flex items-center gap-2 bg-highlight/20 border border-highlight text-highlight px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
                   <span className="w-2 h-2 rounded-full bg-highlight animate-pulse"></span>
                   Loot Drop Disponível
@@ -583,6 +672,61 @@ export default function App() {
                 >
                   <span className="animate-bounce font-mono text-xl">▶</span> PRESS START
                 </button>
+              </div>
+
+              {/* SLIDESHOW DE IMAGENS COM BLUR E ALTERNÂNCIA (VINCULADAS AOS POSTS) */}
+              <div className="hidden md:flex relative z-10 w-full md:w-[42%] lg:w-[38%] mr-8 lg:mr-12 xl:mr-16 h-[320px] flex-col items-center justify-center p-2 select-none">
+                <div 
+                  onClick={() => handleHeroSlideClick(heroSlideDetails[currentHeroSlide].img)}
+                  className="group/slide relative cursor-pointer w-full h-[240px] rounded-xl overflow-hidden border-2 border-highlight/40 hover:border-highlight transition-all duration-300 shadow-[0_0_30px_rgba(240,151,11,0.15)] hover:shadow-[0_0_50px_rgba(240,151,11,0.35)] hover:-translate-y-1 flex items-center justify-center"
+                >
+                  {/* Blurry mirror layer inside the card to get exact user-focused blur effect style */}
+                  <div 
+                    className="absolute inset-0 scale-125 blur-xl opacity-70 transition-all duration-1000 ease-in-out"
+                    style={{
+                      backgroundImage: `url("${heroSlideDetails[currentHeroSlide].img}")`,
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center'
+                    }}
+                  ></div>
+                  
+                  {/* Crisp image centered as a card */}
+                  <img 
+                    src={heroSlideDetails[currentHeroSlide].img} 
+                    alt={heroSlideDetails[currentHeroSlide].title}
+                    referrerPolicy="no-referrer"
+                    className="absolute inset-0 w-full h-full object-cover transition-all duration-1000 ease-in-out opacity-90 group-hover/slide:opacity-100 group-hover/slide:scale-105"
+                  />
+                  
+                  {/* Dark subtle overlay for titles readability */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/30 to-transparent"></div>
+                  
+                  {/* Badge & Title of context */}
+                  <div className="absolute bottom-0 left-0 right-0 p-4 flex flex-col gap-1 z-10">
+                    <span className="text-[10px] uppercase tracking-widest text-highlight font-bold font-mono inline-flex items-center gap-1 bg-black/50 px-2 py-0.5 rounded-sm self-start">
+                      Em Destaque 🔥 Clique para Ler
+                    </span>
+                    <h3 className="text-white font-bold text-sm lg:text-base leading-tight drop-shadow-md line-clamp-2">
+                      {heroSlideDetails[currentHeroSlide].title}
+                    </h3>
+                  </div>
+                </div>
+                
+                {/* Dots Indicator */}
+                <div className="flex gap-2 mt-4 items-center justify-center">
+                  {heroSlideDetails.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => setCurrentHeroSlide(idx)}
+                      className={`h-2 rounded-full transition-all duration-350 cursor-pointer ${
+                        idx === currentHeroSlide 
+                          ? 'w-6 bg-highlight' 
+                          : 'w-2 bg-white/20 hover:bg-highlight/50'
+                      }`}
+                      aria-label={`Ir para slide ${idx + 1}`}
+                    />
+                  ))}
+                </div>
               </div>
             </section>
 

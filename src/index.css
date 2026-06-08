@@ -10,6 +10,53 @@
   --color-border: var(--border);
   --font-serif: Georgia, ui-serif, serif;
   --font-sans: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  
+  /* High-end cinematic ambient animations */
+  --animate-drift-slow: drift-slow 25s ease-in-out infinite;
+  --animate-drift-medium: drift-medium 20s ease-in-out infinite;
+  --animate-glow-pulse: glow-pulse 8s ease-in-out infinite;
+  --animate-grid-pan: grid-pan 120s linear infinite;
+
+  @keyframes drift-slow {
+    0%, 100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(40px, -60px) scale(1.15);
+    }
+    66% {
+      transform: translate(-30px, 30px) scale(0.9);
+    }
+  }
+
+  @keyframes drift-medium {
+    0%, 100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    50% {
+      transform: translate(-50px, 50px) scale(1.2);
+    }
+  }
+
+  @keyframes glow-pulse {
+    0%, 100% {
+      opacity: 0.15;
+      filter: blur(120px) brightness(0.9);
+    }
+    50% {
+      opacity: 0.35;
+      filter: blur(140px) brightness(1.2);
+    }
+  }
+
+  @keyframes grid-pan {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 0 1000px;
+    }
+  }
 }
 
 @layer base {
