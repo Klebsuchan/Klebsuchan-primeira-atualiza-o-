@@ -24,7 +24,7 @@ async function uploadFile(filePath, bucket, destPath) {
 }
 
 async function main() {
-  await uploadFile(path.join(process.cwd(), 'public', 'images', 'scoobydoo.jpg'), 'images', 'scoobydoo.jpg');
+  await uploadFile(path.join(process.cwd(), 'public', 'images', 'ocarinaoftime.jpg'), 'images', 'ocarinaoftime.jpg');
 }
 
 main();
