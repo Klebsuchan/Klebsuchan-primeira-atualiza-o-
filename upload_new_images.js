@@ -24,7 +24,7 @@ async function uploadFile(filePath, bucket, destPath) {
 }
 
 async function main() {
-  await uploadFile(path.join(process.cwd(), 'achar-temas', 'rock.webp'), 'images', 'rock.webp');
+  await uploadFile(path.join(process.cwd(), 'public', 'images', 'scoobydoo.jpg'), 'images', 'scoobydoo.jpg');
 }
 
 main();
