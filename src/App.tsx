@@ -820,10 +820,10 @@ export default function App() {
                       className="group flex gap-4 cursor-pointer bg-card-bg p-3 rounded-lg border border-border hover:border-highlight transition-colors block"
                     >
                       <div className="w-24 h-24 shrink-0 rounded overflow-hidden">
-                         <img 
+                       <img 
                             src={getPostImage(post)} 
                             alt={post.title?.rendered.replace(/<[^>]+>/g, '') || "Capa do Artigo"}
-                            onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                            onError={(e) => { e.currentTarget.src = 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1'; e.currentTarget.style.objectFit = 'contain'; }}
                             fetchPriority={index === 0 ? "high" : "auto"}
                             width="96"
                             height="96"
@@ -997,7 +997,7 @@ export default function App() {
                               <img 
                                 src={getPostImage(relatedPost)} 
                                 alt={relatedPost.title?.rendered.replace(/<[^>]+>/g, '') || "Artigo relacionado"} 
-                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                onError={(e) => { e.currentTarget.src = 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1'; e.currentTarget.style.objectFit = 'contain'; }}
                                 loading="lazy"
                                 decoding="async"
                                 width="400"
@@ -1064,7 +1064,7 @@ export default function App() {
                             <img 
                               src={getPostImage(post)} 
                               alt={post.title?.rendered.replace(/<[^>]+>/g, '') || "Capa do Artigo"} 
-                              onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                              onError={(e) => { e.currentTarget.src = 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1'; e.currentTarget.style.objectFit = 'contain'; }}
                               loading={index < 4 ? "eager" : "lazy"}
                               fetchPriority={index < 2 ? "high" : "auto"}
                               referrerPolicy="no-referrer"
