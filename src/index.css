@@ -94,6 +94,10 @@
   .prose p, .prose li {
     color: var(--accent) !important;
   }
+  .prose blockquote {
+    color: var(--accent) !important;
+    opacity: 0.9;
+  }
 }
 
 body {
