@@ -22,27 +22,41 @@ async function sendEmails() {
       }
     }
 
-    const fromEmail = 'Klebsuchan <onboarding@resend.dev>';
+    const fromEmail = 'Klebsuchan Newsletter <updates@klebsuchan.com.br>';
     
     const postTitle = "🚨 PAROU A INTERNET! Remake de Zelda: Ocarina of Time anunciado para o Switch 2! 🗡️🛡️";
     const appUrl = process.env.VITE_APP_URL || 'https://ais-pre-awvjzwy22pvotiegrpyqfo-385994013673.us-east1.run.app';
     const postUrl = appUrl + '?postId=1780959585407'; // I'll get the real ID in a moment
     
-    const imagePath = path.join(process.cwd(), 'public', 'images', 'ocarinaoftime.jpg');
+    const posts = JSON.parse(fs.readFileSync('src/data/posts.json', 'utf8'));
+    const newlyAddedPost = posts.find(p => p.title.rendered.includes('Ocarina of Time'));
+    const realTitle = newlyAddedPost.title.rendered;
+    const finalPostUrl = 'https://www.klebsuchan.com.br/?post=' + newlyAddedPost.id;
+    const finalPostImage = newlyAddedPost.imageUrl;
     let imageAttachment = null;
     let imgTag = '';
     
-    if (fs.existsSync(imagePath)) {
-      const imageBuffer = fs.readFileSync(imagePath);
-      imageAttachment = {
-        filename: 'ocarinaoftime.jpg',
-        content: imageBuffer,
-        contentId: 'postimagecid'
-      };
-      imgTag = '<img src="cid:postimagecid" alt="Zelda: Ocarina of Time Remake" style="width: 100%; max-width: 600px; border-radius: 8px; margin-bottom: 20px;" />';
+    if (finalPostImage && finalPostImage.startsWith('http')) {
+      try {
+        const imageResponse = await fetch(finalPostImage);
+        const arrayBuffer = await imageResponse.arrayBuffer();
+        let buffer = Buffer.from(arrayBuffer);
+        const sharp = (await import('sharp')).default;
+        buffer = await sharp(buffer).jpeg({ quality: 80 }).toBuffer();
+        
+        let filename = finalPostImage.split('/').pop()?.split('?')[0] || 'image.jpg';
+        filename = filename.replace(/\.[^/.]+$/, "") + ".jpg";
+        
+        imageAttachment = {
+          filename: filename,
+          content: buffer,
+          contentId: 'postimagecid'
+        };
+        imgTag = '<img src="cid:postimagecid" alt="Capa do artigo" class="card-img" />';
+      } catch (err) {
+        console.error('Failed to fetch image', err);
+      }
     }
-
-    const posts = JSON.parse(fs.readFileSync('src/data/posts.json', 'utf8'));
 
     const htmlContent = `
 <!DOCTYPE html>
@@ -98,8 +112,8 @@ async function sendEmails() {
               </div>
               ` : ''}
               <div class="card-content">
-                <h4 class="card-title">${postTitle}</h4>
-                <p class="card-desc">${posts.find(p => p.title.rendered.includes('Ocarina of Time')).excerpt.rendered}</p>
+                <h4 class="card-title">${realTitle}</h4>
+                <p class="card-desc">${newlyAddedPost.excerpt.rendered}</p>
                 <table border="0" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center" bgcolor="#ffd700" style="border-radius: 8px;">
@@ -127,8 +141,6 @@ async function sendEmails() {
 </html>
     `;
 
-    const newlyAddedPost = posts.find(p => p.title.rendered.includes('Ocarina of Time'));
-    const finalPostUrl = appUrl + '?postId=' + newlyAddedPost.id;
     const finalHtml = htmlContent.replace(postUrl, finalPostUrl).replace(postUrl, finalPostUrl);
 
     if (process.env.RESEND_API_KEY) {
@@ -139,7 +151,7 @@ async function sendEmails() {
           const res = await resend.emails.send({
             from: fromEmail,
             to: email,
-            subject: postTitle,
+            subject: 'Novo Artigo: ' + realTitle,
             html: finalHtml,
             attachments: imageAttachment ? [imageAttachment] : []
           });

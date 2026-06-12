@@ -10,6 +10,52 @@ import Store from './components/Store';
 import { supabase } from './supabase';
 import { ShareModal } from './components/ShareModal';
 
+// Helper para adicionar subcabeçalhos dinamicamente em textos longos para SEO/AdSense
+function enhancePostContent(html: string): string {
+  if (!html) return '';
+  
+  const h2Count = (html.match(/<h2/g) || []).length;
+  const h3Count = (html.match(/<h3/g) || []).length;
+  
+  // Se já tem headings suficientes, retorna como está
+  if (h2Count + h3Count >= 2) {
+    return html;
+  }
+
+  const pTags = html.split('</p>');
+  // Se o texto for curto, não adiciona
+  if (pTags.length <= 4) return html;
+
+  let enhanced = '';
+  let count = 0;
+  
+  const defaultHeadings = [
+    '<h2 class="text-2xl font-serif font-black text-accent mt-8 mb-4">Análise e Contexto Nerd</h2>',
+    '<h3 class="text-xl font-serif font-bold text-highlight mt-6 mb-3">Impacto na Comunidade e Tendências</h3>',
+    '<h2 class="text-2xl font-serif font-black text-accent mt-8 mb-4">Veredito e o Que o Futuro Nos Reserva</h2>'
+  ];
+  let hIndex = 0;
+
+  for (let i = 0; i < pTags.length; i++) {
+    const chunk = pTags[i];
+    enhanced += chunk;
+    if (chunk.toLowerCase().includes('<p') || chunk.trim().length > 0) {
+      if (chunk.includes('<p')) enhanced += '</p>';
+      count++;
+    }
+
+    // A cada 3-4 parágrafos, insere um cabeçalho
+    if (count >= 3 && i < pTags.length - 2 && hIndex < defaultHeadings.length) {
+      enhanced += '\n' + defaultHeadings[hIndex] + '\n';
+      hIndex++;
+      count = 0;
+    }
+  }
+
+  return enhanced;
+}
+
+
 export default function App() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -517,8 +563,8 @@ export default function App() {
           <nav className="flex gap-[15px] lg:gap-[20px] text-[10px] lg:text-[12px] uppercase tracking-[1px] text-muted">
             <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</span>
             <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'posts' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Artigos</span>
-            <span onClick={() => { setActiveTab('loja'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'loja' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Loja</span>
-            <span onClick={() => { setActiveTab('servicos'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'servicos' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Serviços</span>
+            <span className="hidden"></span>
+            <span className="hidden"></span>
             <span onClick={() => { setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'quem-somos' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Quem Somos</span>
             <span onClick={() => { setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'contato' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Contato</span>
           </nav>
@@ -598,8 +644,8 @@ export default function App() {
         <div className="md:hidden fixed top-[80px] left-0 right-0 bg-bg border-b border-border z-30 flex flex-col p-5 gap-4 shadow-2xl">
           <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'inicio' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Início</span>
           <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: 'Últimos Artigos', categoryIds: []}); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'posts' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Artigos</span>
-          <span onClick={() => { setActiveTab('loja'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'loja' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Loja</span>
-          <span onClick={() => { setActiveTab('servicos'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'servicos' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Serviços</span>
+          <span className="hidden"></span>
+          <span className="hidden"></span>
           <span onClick={() => { setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'quem-somos' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Quem Somos</span>
           <span onClick={() => { setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'contato' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Contato</span>
         </div>
@@ -767,36 +813,7 @@ export default function App() {
                     </div>
                   ))}
 
-                  <div 
-                    className="group relative overflow-hidden rounded-xl border border-highlight/50 bg-gradient-to-br from-[#121214] to-[#202024] cursor-default h-40 flex flex-row items-center gap-3 sm:gap-4 p-3 sm:p-4 hover:border-highlight transition-colors"
-                  >
-                    <div className="shrink-0 bg-white p-1 rounded-xl shadow-lg">
-                      <img 
-                        src="/images/qrcodepix.jpeg" 
-                        alt="QR Code PIX" 
-                        className="w-20 h-20 sm:w-24 sm:h-24 object-contain"
-                      />
-                    </div>
-                    <div className="flex flex-col flex-1 justify-center z-10 relative">
-                      <h3 className="text-highlight text-sm sm:text-base font-serif font-black uppercase tracking-wide mb-1">
-                        Apoie nosso Trabalho!
-                      </h3>
-                      <p className="text-[10px] sm:text-xs text-text-muted mb-2 leading-tight">
-                        Qualquer doação é mais um apoio para trazermos conteúdo de qualidade.
-                      </p>
-                      <button 
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigator.clipboard.writeText('b0f51ae0-be9f-4b87-9da4-0ca63dd8ccbb');
-                          alert('Chave PIX copiada: b0f51ae0-be9f-4b87-9da4-0ca63dd8ccbb');
-                        }}
-                        className="text-[10px] sm:text-xs bg-highlight/10 text-highlight hover:bg-highlight hover:text-black px-2 py-1.5 rounded font-bold uppercase transition-colors self-start border border-highlight/30 flex items-center gap-1"
-                        title="Copiar chave PIX"
-                      >
-                        Copiar Chave
-                      </button>
-                    </div>
-                  </div>
+                  
                 </div>
               </section>
 
@@ -970,7 +987,7 @@ export default function App() {
                 
                 <div 
                   className={`prose prose-lg max-w-none prose-headings:font-serif prose-img:hidden mt-8`}
-                  dangerouslySetInnerHTML={{ __html: selectedPost.content.rendered }}
+                  dangerouslySetInnerHTML={{ __html: enhancePostContent(selectedPost.content.rendered) }}
                 />
 
                 {/* POSTS RELACIONADOS */}
@@ -1318,7 +1335,7 @@ export default function App() {
               <h4 className="font-bold uppercase tracking-wider text-accent mb-2">Navegação</h4>
               <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Início</span>
               <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Artigos</span>
-              <span onClick={() => { setActiveTab('loja'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Loja</span>
+              <span className="hidden"></span>
               <span onClick={() => { setActiveTab('quem-somos'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Sobre o Autor</span>
             </div>
             
