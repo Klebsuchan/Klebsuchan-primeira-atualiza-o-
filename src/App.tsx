@@ -385,16 +385,27 @@ export default function App() {
   }, [activeTab]);
 
   const [currentHeroSlide, setCurrentHeroSlide] = useState(0);
-  const heroSlideDetails = [
-    { img: '/images/bluelock.webp', title: 'Egoístas, Comemorem! Blue Lock Confirma 3ª Temporada com Visual Insano!' },
-    { img: '/images/veronica.jpg', title: 'A Justiça Foi Feita! Resident Evil Veronica é Oficial para 2027!' },
-    { img: '/images/spidernoir.jpg', title: 'Nicolas Cage quebra o silêncio sobre a 2ª temporada de Spider-Noir' },
-    { img: '/images/mandaloriano.webp', title: 'O Mandaloriano e Grogu nos cinemas com Hideo Kojima!' },
-    { img: '/images/myheroacademia.webp', title: 'My Hero Academia consagrado o Anime do Ano no Awards' },
-    { img: '/images/theboyshq.jpg', title: 'O final chocante de The Boys nos quadrinhos detalhado' },
-    { img: '/images/theboys.webp', title: 'O que esperar do encerramento insano da série The Boys' },
-    { img: '/images/animes2026.jpg', title: 'Guia definitivo de lançamentos imperdíveis de animes em 2026' }
-  ];
+  // Use the freshest posts dynamically as hero slides
+  const heroSlideDetails = homePosts.length > 5 
+    ? homePosts.slice(0, 5).map(p => {
+        let imageSrc = 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/tech_ia.png';
+        if (p.custom_fields && p.custom_fields.featured_image && p.custom_fields.featured_image[0]) {
+           imageSrc = p.custom_fields.featured_image[0];
+        } else if (p.custom_fields && p.custom_fields.enclosure && p.custom_fields.enclosure[0]) {
+           imageSrc = p.custom_fields.enclosure[0].split('\n')[0];
+        } else {
+           // Helper function getPostImage is outside, let's use it where possible
+           imageSrc = getPostImage(p) || imageSrc;
+        }
+        return {
+          img: imageSrc,
+          title: p.title.rendered.replace(/<[^>]+>/g, ''),
+          post: p
+        };
+      })
+    : [
+        { img: 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/BANNER_SITE_ANIMES_2025.webp', title: 'O Multiverso Nerd em Expansão!' }
+      ];
 
   useEffect(() => {
     if (activeTab === 'inicio') {
@@ -675,21 +686,21 @@ export default function App() {
               
               {/* Drifting Glowing Ambient Orbs for multi-layered parallax depth */}
               <div className="absolute -top-[10%] -left-[5%] w-[450px] h-[450px] animate-drift-slow pointer-events-none">
-                <div className="w-full h-full rounded-full bg-highlight/40 mix-blend-screen animate-glow-pulse" />
+                <div className="w-full h-full rounded-full bg-highlight mix-blend-screen animate-glow-pulse opacity-60" />
               </div>
               <div className="absolute -bottom-[15%] left-[20%] w-[500px] h-[500px] animate-drift-medium pointer-events-none">
-                <div className="w-full h-full rounded-full bg-[#f0970b]/30 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-4s' }} />
+                <div className="w-full h-full rounded-full bg-[#f0970b] mix-blend-screen animate-glow-pulse opacity-50" style={{ animationDelay: '-4s' }} />
               </div>
               <div className="absolute top-[25%] -right-[5%] w-[380px] h-[380px] animate-drift-slow pointer-events-none">
-                <div className="w-full h-full rounded-full bg-red-500/20 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-8s' }} />
+                <div className="w-full h-full rounded-full bg-red-500 mix-blend-screen animate-glow-pulse opacity-40" style={{ animationDelay: '-8s' }} />
               </div>
               
               {/* Subtle CRT Scanlines overlay */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px)] [background-size:100%_4px] pointer-events-none opacity-50"></div>
 
               {/* Sophisticated dark ambient gradient mask for ultimate caption readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/40 via-black/20 to-[#070707]/40 md:bg-gradient-to-r md:from-[#030303]/60 md:via-black/30 md:to-transparent pointer-events-none"></div>
-              <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#070707] to-transparent pointer-events-none md:hidden"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-transparent md:bg-gradient-to-r md:from-black/70 md:via-black/10 md:to-transparent pointer-events-none"></div>
+              <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#070707]/80 to-transparent pointer-events-none md:hidden"></div>
               
               <div className="relative z-10 p-6 sm:p-12 lg:p-16 flex flex-col items-start gap-4 sm:gap-6 max-w-2xl lg:max-w-3xl flex-1">
                 <div className="inline-flex items-center gap-2 bg-highlight/20 border border-highlight text-highlight px-3 py-1 rounded-full text-xs font-bold uppercase tracking-widest">
