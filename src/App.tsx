@@ -665,7 +665,7 @@ export default function App() {
                     backgroundImage: `url("${slide.img}")`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    opacity: idx === currentHeroSlide ? 0.6 : 0,
+                    opacity: idx === currentHeroSlide ? 0.9 : 0,
                   }}
                 />
               ))}
@@ -675,20 +675,20 @@ export default function App() {
               
               {/* Drifting Glowing Ambient Orbs for multi-layered parallax depth */}
               <div className="absolute -top-[10%] -left-[5%] w-[450px] h-[450px] animate-drift-slow pointer-events-none">
-                <div className="w-full h-full rounded-full bg-highlight/20 mix-blend-screen animate-glow-pulse" />
+                <div className="w-full h-full rounded-full bg-highlight/40 mix-blend-screen animate-glow-pulse" />
               </div>
               <div className="absolute -bottom-[15%] left-[20%] w-[500px] h-[500px] animate-drift-medium pointer-events-none">
-                <div className="w-full h-full rounded-full bg-[#f0970b]/15 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-4s' }} />
+                <div className="w-full h-full rounded-full bg-[#f0970b]/30 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-4s' }} />
               </div>
               <div className="absolute top-[25%] -right-[5%] w-[380px] h-[380px] animate-drift-slow pointer-events-none">
-                <div className="w-full h-full rounded-full bg-red-500/10 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-8s' }} />
+                <div className="w-full h-full rounded-full bg-red-500/20 mix-blend-screen animate-glow-pulse" style={{ animationDelay: '-8s' }} />
               </div>
               
               {/* Subtle CRT Scanlines overlay */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.003)_1px,transparent_1px)] [background-size:100%_4px] pointer-events-none opacity-50"></div>
 
               {/* Sophisticated dark ambient gradient mask for ultimate caption readability */}
-              <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/95 via-black/90 to-[#070707]/95 md:bg-gradient-to-r md:from-[#030303] md:via-black/90 md:to-black/30 pointer-events-none"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-[#030303]/40 via-black/20 to-[#070707]/40 md:bg-gradient-to-r md:from-[#030303]/60 md:via-black/30 md:to-transparent pointer-events-none"></div>
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-[#070707] to-transparent pointer-events-none md:hidden"></div>
               
               <div className="relative z-10 p-6 sm:p-12 lg:p-16 flex flex-col items-start gap-4 sm:gap-6 max-w-2xl lg:max-w-3xl flex-1">
