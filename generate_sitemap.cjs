@@ -14,6 +14,14 @@ try {
     { title: 'Tecnologia & Gadgets' }
   ];
 
+  const staticPages = [
+    'quem-somos',
+    'contato',
+    'termos',
+    'privacidade',
+    'posts'
+  ];
+
   let sitemapContent = "<?xml version='1.0' encoding='UTF-8'?>\n" +
 "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'\n" +
 "        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n" +
@@ -23,13 +31,16 @@ try {
 "    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
 "    <changefreq>daily</changefreq>\n" +
 "    <priority>1.0</priority>\n" +
-"  </url>\n" +
-"  <url>\n" +
-"    <loc>https://klebsuchan.com.br/?tab=quem-somos</loc>\n" +
-"    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
-"    <changefreq>monthly</changefreq>\n" +
-"    <priority>0.8</priority>\n" +
 "  </url>\n";
+
+  staticPages.forEach(page => {
+    sitemapContent += "  <url>\n" +
+    "    <loc>https://klebsuchan.com.br/?tab=" + page + "</loc>\n" +
+    "    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
+    "    <changefreq>monthly</changefreq>\n" +
+    "    <priority>0.8</priority>\n" +
+    "  </url>\n";
+  });
 
   categoryGroups.forEach(group => {
     sitemapContent += "  <url>\n" +

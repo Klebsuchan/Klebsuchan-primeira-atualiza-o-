@@ -888,20 +888,7 @@ export default function App() {
                   </div>
                 </a>
 
-                <button 
-                  onClick={() => { setActiveTab('loja'); setSelectedPost(null); setSelectedCategoryGroup(null); }}
-                  className="mt-4 bg-highlight p-[2px] rounded-xl cursor-pointer group hover:bg-opacity-80 transition-opacity w-full text-left"
-                >
-                  <div className="bg-card-bg rounded-[10px] p-5 h-full flex items-center gap-4 group-hover:bg-highlight transition-colors">
-                    <div className="w-12 h-12 bg-accent/10 rounded-full flex items-center justify-center text-accent group-hover:text-white shrink-0 group-hover:scale-110 transition-transform shadow-lg">
-                      <ShoppingBag size={24} />
-                    </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-accent group-hover:text-white">Klebsuchan Store</span>
-                      <span className="text-sm text-muted group-hover:text-white/90">Equipamentos e colecionáveis</span>
-                    </div>
-                  </div>
-                </button>
+                
               </aside>
             </div>
 
@@ -914,7 +901,7 @@ export default function App() {
                     Entre para a Guilda!
                   </h2>
                   <p className="text-muted text-lg">
-                    Receba no seu e-mail as melhores análises, memes e promoções exclusivas da nossa loja. Zero spam, apenas XP pro seu dia.
+                    Receba no seu e-mail as melhores análises, memes Zero spam, apenas XP pro seu dia.
                   </p>
                 </div>
                 <div className="w-full md:w-auto flex-1 max-w-md">
@@ -1164,55 +1151,6 @@ export default function App() {
           </section>
         )}
 
-        {activeTab === 'loja' && (
-          <Store />
-        )}
-
-        {activeTab === 'servicos' && (
-          <section className="flex-1 p-6 sm:p-10 lg:p-20 w-full max-w-4xl mx-auto">
-            <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
-              <h2 className="text-3xl lg:text-4xl font-serif font-black mb-8 pb-4 border-b border-border uppercase tracking-tight flex items-center gap-3">
-                <span className="w-4 h-8 bg-highlight inline-block"></span> Nossa Guilda (Serviços)
-              </h2>
-              
-              <div className="flex flex-col gap-8">
-                <div className="bg-card-bg border border-border border-l-4 border-l-highlight p-6 hover:border-highlight transition-colors relative overflow-hidden group">
-                  <div className="absolute right-0 top-0 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none text-9xl font-black -mt-6 -mr-4">01</div>
-                  <h3 className="text-2xl font-black font-serif text-accent mb-4 uppercase tracking-wider">A Taverna do Conhecimento Nerd</h3>
-                  <p className="text-muted leading-relaxed mb-4">
-                    No <strong>Klebsuchan</strong>, nós não entregamos apenas notícias... nós dropamos XP! Nosso objetivo é masterizar seu conhecimento sobre entretenimento, memes, animes, mangás, games e cultura pop.
-                  </p>
-                  <p className="text-muted leading-relaxed">
-                    Cada post é um easter egg a ser descoberto. Seja um guia pra passar daquele boss impossível, reviews dos animes da temporada ou uma dose diária de memes de alta qualidade (pra curar sua sanidade mental), você tá no lugar certo pra upar de nível.
-                  </p>
-                </div>
-
-                <div className="bg-card-bg border border-border border-l-4 border-l-highlight p-6 hover:border-highlight transition-colors relative overflow-hidden group">
-                  <div className="absolute right-0 top-0 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none text-9xl font-black -mt-6 -mr-4">02</div>
-                  <h3 className="text-2xl font-black font-serif text-accent mb-4 uppercase tracking-wider">Loot 100% Gratuito (Sem Pay2Win)</h3>
-                  <p className="text-muted leading-relaxed mb-4">
-                    Aqui você não precisa comprar Passe de Batalha pra ler. Todo nosso conteúdo está desbloqueado desde o nível 1: notícias quentes, críticas polêmicas, resumos de filmes e as builds mais quebradas do momento.
-                  </p>
-                  <p className="text-muted leading-relaxed">
-                    Nossa party de redatores tem um único objetivo: craftar o conteúdo mais atualizado sobre o multiverso geek. Fazemos as quests diárias patrulhando a internet (de fóruns obscuros até os vazamentos oficiais) para te trazer o loot mais valioso.
-                  </p>
-                </div>
-
-                <div className="bg-card-bg border border-border border-l-4 border-l-highlight p-6 hover:border-highlight transition-colors relative overflow-hidden group">
-                  <div className="absolute right-0 top-0 opacity-5 group-hover:opacity-10 transition-opacity pointer-events-none text-9xl font-black -mt-6 -mr-4">03</div>
-                  <h3 className="text-2xl font-black font-serif text-accent mb-4 uppercase tracking-wider">Como Farmar no Nosso Multiverso</h3>
-                  <p className="text-muted leading-relaxed mb-4">
-                    Explorar o Klebsuchan é tão fácil quanto dar R1+Triângulo. Acesse nossas categorias pelo hub inicial, selecione sua classe favorita (Otaku, Tryhard, Cinéfilo ou Mestre dos Memes) e absorva o conteúdo.
-                  </p>
-                  <p className="text-muted leading-relaxed">
-                    Dê respawn diariamente no site! Afinal, o meta da internet sempre muda. Venha fazer parte dessa comunidade, compartilhe o link com aquele seu duo que carrega as partidas, e continue combando com a gente. GG WP!
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
-
         {activeTab === 'contato' && (
           <section className="flex-1 p-6 sm:p-10 lg:p-20 w-full max-w-4xl mx-auto">
             <div className="animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -1250,8 +1188,8 @@ export default function App() {
               <h2 className="text-2xl lg:text-3xl font-serif font-bold mb-6 pb-4 border-b border-border">Termos de Uso</h2>
               <div className="text-muted leading-relaxed space-y-4">
                 <p>Bem-vindo ao Klebsuchan. Ao acessar e utilizar este site, você concorda em cumprir e estar vinculado a estes termos de uso.</p>
-                <p>Este portal tem como objetivo fornecer conteúdo sobre a cultura geek, otaku e nerd, incluindo artigos informativos, tutoriais e links de afiliados da Shopee.</p>
-                <p>O conteúdo publicado é para uso informativo e de entretenimento. Os links para a loja da Shopee presentes no site representam a Loja Parceira Klebsuchan, e compras realizadas através desses links podem gerar comissões para manter este projeto no ar.</p>
+                <p>Este portal tem como objetivo fornecer conteúdo sobre a cultura geek, otaku e nerd.</p>
+                <p>O conteúdo publicado é para uso informativo e de entretenimento. </p>
                 <p>É proibido utilizar o site para qualquer finalidade ilegal, violar propriedade intelectual, realizar spam ou tentar invadir nossa infraestrutura.</p>
                 <p>Reservamo-nos o direito de alterar os termos de uso a qualquer momento, sendo de responsabilidade do usuário revisar esta página periodicamente.</p>
               </div>
@@ -1290,7 +1228,7 @@ export default function App() {
                   <li><strong>Cookies Analíticos:</strong> Servem para entender de forma agregada quais postagens e reviews estão fazendo mais sucesso, permitindo melhorar nossa curadoria.</li>
                   <li><strong>Cookies de Publicidade (Google AdSense):</strong> Fornecedores de terceiros, incluindo o Google (Google AdSense), usam cookies para veicular anúncios com base nas visitas anteriores do usuário ao nosso website ou a outros websites, com base em suas visitas aos nossos sites ou a outros sites na Internet.</li>
                 </ul>
-                <p>Além disso, destacamos o uso de cookies através da integração da Loja da Shopee. Se você clicar e for redirecionado, cookies de parceiros podem rastrear essa origem (Afiliados Shopee).</p>
+                <p></p>
                 <p>Você pode controlar ou desativar o uso de cookies nas configurações do seu próprio navegador ou acessar a página de <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-highlight hover:underline">Configurações de Anúncios do Google</a> para desativar a publicidade personalizada. Note que algumas funcionalidades da interface podem não responder como o esperado caso você opte por desativá-los.</p>
               </div>
             </div>
