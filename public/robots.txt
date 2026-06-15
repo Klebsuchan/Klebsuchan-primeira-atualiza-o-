@@ -1,4 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /dist/
+Disallow: /build/
+Disallow: /*.json$
 
 Sitemap: https://www.klebsuchan.com.br/sitemap.xml
