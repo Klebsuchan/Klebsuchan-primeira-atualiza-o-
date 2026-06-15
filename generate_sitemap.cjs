@@ -44,7 +44,7 @@ async function generateSitemap() {
 "        xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'\n" +
 "        xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd'>\n" +
 "  <url>\n" +
-"    <loc>https://klebsuchan.com.br/</loc>\n" +
+"    <loc>https://www.klebsuchan.com.br/</loc>\n" +
 "    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
 "    <changefreq>daily</changefreq>\n" +
 "    <priority>1.0</priority>\n" +
@@ -52,7 +52,7 @@ async function generateSitemap() {
 
     staticPages.forEach(page => {
       sitemapContent += "  <url>\n" +
-      "    <loc>https://klebsuchan.com.br/?tab=" + page + "</loc>\n" +
+      "    <loc>https://www.klebsuchan.com.br/?tab=" + page + "</loc>\n" +
       "    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
       "    <changefreq>monthly</changefreq>\n" +
       "    <priority>0.8</priority>\n" +
@@ -61,7 +61,7 @@ async function generateSitemap() {
 
     categoryGroups.forEach(group => {
       sitemapContent += "  <url>\n" +
-      "    <loc>https://klebsuchan.com.br/?category=" + slugify(group.title) + "</loc>\n" +
+      "    <loc>https://www.klebsuchan.com.br/?category=" + slugify(group.title) + "</loc>\n" +
       "    <lastmod>" + new Date().toISOString().split('T')[0] + "</lastmod>\n" +
       "    <changefreq>daily</changefreq>\n" +
       "    <priority>0.9</priority>\n" +
@@ -70,7 +70,7 @@ async function generateSitemap() {
 
     posts.forEach(post => {
       sitemapContent += "  <url>\n" +
-      "    <loc>https://klebsuchan.com.br/?post=" + post.id + "</loc>\n" +
+      "    <loc>https://www.klebsuchan.com.br/?post=" + post.id + "</loc>\n" +
       "    <lastmod>" + new Date(post.date || Date.now()).toISOString().split('T')[0] + "</lastmod>\n" +
       "    <changefreq>weekly</changefreq>\n" +
       "    <priority>0.7</priority>\n" +
