@@ -2,6 +2,10 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 export default function handler(req: any, res: any) {
+  if (req.url === '/ads.txt') {
+    res.setHeader('Content-Type', 'text/plain');
+    return res.status(200).send('google.com, pub-9744461219888035, DIRECT, f08c47fec0942fa0');
+  }
   try {
     const cwd = process.cwd();
     // Try to find index.html

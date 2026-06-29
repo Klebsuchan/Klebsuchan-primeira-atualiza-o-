@@ -23,6 +23,10 @@ async function startServer() {
     const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath, { index: false }));
     // Em Express versão 4 ou 5
+    app.get("/ads.txt", (req, res) => {
+      return res.type("text/plain").send("google.com, pub-9744461219888035, DIRECT, f08c47fec0942fa0");
+    });
+
     app.get("*", (req, res) => {
       let html = "";
       try {

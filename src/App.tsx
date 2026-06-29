@@ -4,10 +4,9 @@ import { Helmet } from 'react-helmet-async';
 import { auth } from './firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
 
-export const generateSlug = (title: string) => {
-  if (!title) return '';
-  return title.replace(/<[^>]+>/g, '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-};
+
+
+
 
 import { fetchPosts, Post } from './services/api';
 import PostComments from './components/PostComments';
@@ -15,6 +14,11 @@ import SearchModal from './components/SearchModal';
 import Store from './components/Store';
 import { supabase } from './supabase';
 import { ShareModal } from './components/ShareModal';
+
+export const generateSlug = (title: string) => {
+  if (!title) return '';
+  return title.replace(/<[^>]+>/g, '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+};
 
 // Helper para adicionar subcabeçalhos dinamicamente em textos longos para SEO/AdSense
 function enhancePostContent(html: string): string {
