@@ -2,10 +2,9 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 export default function handler(req: any, res: any) {
-  if (req.url === '/sw.js' || req.url === '/sw%20(2).js' || req.url === '/sw (2).js') {
-    const reqPath = decodeURIComponent(req.url);
-    const swPath = require('path').join(process.cwd(), 'public', reqPath);
-    const swPathDist = require('path').join(process.cwd(), 'dist', reqPath);
+  if (req.url === '/sw.js') {
+    const swPath = path.join(process.cwd(), 'public', 'sw.js');
+    const swPathDist = path.join(process.cwd(), 'dist', 'sw.js');
     let swContent = '';
     if (fs.existsSync(swPathDist)) swContent = fs.readFileSync(swPathDist, 'utf8');
     else if (fs.existsSync(swPath)) swContent = fs.readFileSync(swPath, 'utf8');
