@@ -473,7 +473,7 @@ app.post("/api/notify-new-post", async (req, res) => {
           attachments = [{
             filename: filename,
             content: buffer,
-            contentId: 'postimagecid'
+            contentId: 'postimagecid', content_id: 'postimagecid'
           }];
           imageSrc = 'cid:postimagecid';
         } else {
@@ -487,7 +487,7 @@ app.post("/api/notify-new-post", async (req, res) => {
             attachments = [{
               filename: filename,
               content: imageBuffer,
-              contentId: 'postimagecid'
+              contentId: 'postimagecid', content_id: 'postimagecid'
             }];
             imageSrc = 'cid:postimagecid';
           } else {

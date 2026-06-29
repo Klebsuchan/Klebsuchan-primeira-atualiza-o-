@@ -1300,7 +1300,17 @@ export default function App() {
         
         <div className="w-full bg-bg border-t border-border py-4 px-6 sm:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-muted text-center sm:text-left">
           <span>© {new Date().getFullYear()} Klebsuchan. Todos os direitos reservados.</span>
-          <span>Desenvolvido com dedicação para a comunidade geek.</span>
+          <span>
+            Desenvolvido com dedicação para a comunidade geek. |{' '}
+            <a 
+              href="https://portfolio-braian-three.vercel.app/" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-highlight hover:underline font-medium"
+            >
+              Desenvolvedor Braian Kmdc
+            </a>
+          </span>
         </div>
       </footer>
 

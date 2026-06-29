@@ -12,7 +12,7 @@ async function generateSitemap() {
     // Tentativa principal: Carregar da API / Banco de dados remoto do Supabase 
     console.log('Buscando dados de posts remoto...');
     try {
-      const response = await fetch(`${SUPABASE_DATA_URL}/posts.json`);
+      throw new Error(); const response = await fetch(`${SUPABASE_DATA_URL}/posts.json`);
       if (response.ok) {
         posts = await response.json();
       } else {
