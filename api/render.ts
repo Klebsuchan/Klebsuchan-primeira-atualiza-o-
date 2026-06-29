@@ -2,6 +2,17 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 export default function handler(req: any, res: any) {
+  if (req.url === '/sw.js') {
+    const swPath = path.join(process.cwd(), 'public', 'sw.js');
+    const swPathDist = path.join(process.cwd(), 'dist', 'sw.js');
+    let swContent = '';
+    if (fs.existsSync(swPathDist)) swContent = fs.readFileSync(swPathDist, 'utf8');
+    else if (fs.existsSync(swPath)) swContent = fs.readFileSync(swPath, 'utf8');
+    if (swContent) {
+      res.setHeader('Content-Type', 'application/javascript');
+      return res.status(200).send(swContent);
+    }
+  }
   if (req.url === '/ads.txt') {
     res.setHeader('Content-Type', 'text/plain');
     return res.status(200).send('google.com, pub-9744461219888035, DIRECT, f08c47fec0942fa0');
