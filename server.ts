@@ -20,37 +20,75 @@ async function startServer() {
     app.use(vite.middlewares);
   } else {
     // Modo de produção: serve os arquivos gerados em 'dist'
-    const distPath = path.join(process.cwd(), 'dist');
+    const distPath = path.join(process.cwd(), "dist");
     app.use(express.static(distPath, { index: false }));
     // Em Express versão 4 ou 5
-    app.get('*', (req, res) => {
-      let html = '';
+    app.get("*", (req, res) => {
+      let html = "";
       try {
-        html = fs.readFileSync(path.join(distPath, 'index.html'), 'utf8');
+        html = fs.readFileSync(path.join(distPath, "index.html"), "utf8");
       } catch (e) {
-        return res.status(404).send('Not found');
+        return res.status(404).send("Not found");
       }
 
       const postId = req.query.post;
       if (postId) {
         try {
-          const postsPath = path.join(process.cwd(), 'src', 'data', 'posts.json');
-          const postsData = fs.readFileSync(postsPath, 'utf8');
+          const postsPath = path.join(
+            process.cwd(),
+            "src",
+            "data",
+            "posts.json",
+          );
+          const postsData = fs.readFileSync(postsPath, "utf8");
           const posts = JSON.parse(postsData);
-          const post = posts.find((p: any) => p.id.toString() === postId.toString());
+          const post = posts.find(
+            (p: any) => p.id.toString() === postId.toString().split('-')[0],
+          );
           if (post) {
-            const title = post.title?.rendered?.replace(/<[^>]+>/g, '') || 'Klebsuchan';
-            const excerpt = post.excerpt?.rendered?.replace(/<[^>]+>/g, '').substring(0, 150) || 'Confira este artigo na Klebsuchan!';
-            const imageUrl = post.imageUrl || post.jetpack_featured_media_url || 'https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1';
-            
-            html = html.replace(/<title>.*?<\/title>/, `<title>${title} | Klebsuchan</title>`);
-            html = html.replace(/<meta property="og:title" content="[^"]*"/, `<meta property="og:title" content="${title} | Klebsuchan"`);
-            html = html.replace(/<meta property="og:description" content="[^"]*"/, `<meta property="og:description" content="${excerpt}"`);
-            html = html.replace(/<meta name="description" content="[^"]*"/, `<meta name="description" content="${excerpt}"`);
-            html = html.replace(/<meta property="og:image" content="[^"]*"/, `<meta property="og:image" content="${imageUrl}"`);
-            html = html.replace(/<meta name="twitter:title" content="[^"]*"/, `<meta name="twitter:title" content="${title} | Klebsuchan"`);
-            html = html.replace(/<meta name="twitter:description" content="[^"]*"/, `<meta name="twitter:description" content="${excerpt}"`);
-            html = html.replace(/<meta name="twitter:image" content="[^"]*"/, `<meta name="twitter:image" content="${imageUrl}"`);
+            const title =
+              post.title?.rendered?.replace(/<[^>]+>/g, "") || "Klebsuchan";
+            const excerpt =
+              post.excerpt?.rendered
+                ?.replace(/<[^>]+>/g, "")
+                .substring(0, 150) || "Confira este artigo na Klebsuchan!";
+            const imageUrl =
+              post.imageUrl ||
+              post.jetpack_featured_media_url ||
+              "https://eezccvpkexmssynooupi.supabase.co/storage/v1/object/public/images/logo_klebsuchan_sem_fundo.png?v=1";
+
+            html = html.replace(
+              /<title>.*?<\/title>/,
+              `<title>${title} | Klebsuchan</title>`,
+            );
+            html = html.replace(
+              /<meta property="og:title" content="[^"]*"/,
+              `<meta property="og:title" content="${title} | Klebsuchan"`,
+            );
+            html = html.replace(
+              /<meta property="og:description" content="[^"]*"/,
+              `<meta property="og:description" content="${excerpt}"`,
+            );
+            html = html.replace(
+              /<meta name="description" content="[^"]*"/,
+              `<meta name="description" content="${excerpt}"`,
+            );
+            html = html.replace(
+              /<meta property="og:image" content="[^"]*"/,
+              `<meta property="og:image" content="${imageUrl}"`,
+            );
+            html = html.replace(
+              /<meta name="twitter:title" content="[^"]*"/,
+              `<meta name="twitter:title" content="${title} | Klebsuchan"`,
+            );
+            html = html.replace(
+              /<meta name="twitter:description" content="[^"]*"/,
+              `<meta name="twitter:description" content="${excerpt}"`,
+            );
+            html = html.replace(
+              /<meta name="twitter:image" content="[^"]*"/,
+              `<meta name="twitter:image" content="${imageUrl}"`,
+            );
 
             // Injetar JSON-LD para os artigos (Artigo de Notícia SEO)
             const scriptJsonLd = `
@@ -72,21 +110,59 @@ async function startServer() {
     }
     </script>
             `;
-            html = html.replace('</head>', `${scriptJsonLd}\n  </head>`);
+            html = html.replace("</head>", `${scriptJsonLd}\n  </head>`);
 
             const seoContent = `
-              <article style="position: absolute; opacity: 0; pointer-events: none;">
+              <article>
                 <h1>${title}</h1>
-                ${post.content?.rendered || ''}
+                ${post.content?.rendered || ""}
               </article>
             `;
-            html = html.replace('<div id="root"></div>', `<div id="root">${seoContent}</div>`);
+            html = html.replace(
+              '<div id="root"></div>',
+              `<div id="root">${seoContent}</div>`,
+            );
           }
         } catch (err) {
           console.error("Erro ao injetar meta tags:", err);
         }
+      } else {
+        // INJETAR CONTEÚDO SEO NA HOME PAGE
+        try {
+          const postsPath = path.join(
+            process.cwd(),
+            "src",
+            "data",
+            "posts.json",
+          );
+          if (fs.existsSync(postsPath)) {
+            const postsData = fs.readFileSync(postsPath, "utf8");
+            const posts = JSON.parse(postsData);
+            let linksHtml = "";
+            const recentPosts = posts.slice(0, 30); // Ultimos 30 posts
+            for (const p of recentPosts) {
+              linksHtml += `<li><a href="?post=${p.id}-${(p.title?.rendered || '').replace(/<[^>]+>/g, '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')}">${p.title?.rendered || "Artigo"}</a><br><p>${p.excerpt?.rendered?.replace(/<[^>]+>/g, "").substring(0, 150) || ""}</p></li>`;
+            }
+            const seoContent = `
+              <div>
+                <h1>Klebsuchan | Hub de Cultura Otaku, Nerd e Geek</h1>
+                <p>Klebsuchan é o seu blog e portal definitivo sobre Cultura Nerd, Otaku e Geek. Leia as melhores notícias, reviews, animes, mangás, games, filmes e tecnologia em primeira mão!</p>
+                <h2>Últimos Artigos Publicados</h2>
+                <ul>
+                  ${linksHtml}
+                </ul>
+              </div>
+            `;
+            html = html.replace(
+              '<div id="root"></div>',
+              `<div id="root">${seoContent}</div>`,
+            );
+          }
+        } catch (e) {
+          console.error("Error generating homepage SEO", e);
+        }
       }
-      
+
       res.send(html);
     });
   }

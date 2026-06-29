@@ -3,6 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { auth } from './firebase';
 import { GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged, User } from 'firebase/auth';
+
+export const generateSlug = (title: string) => {
+  if (!title) return '';
+  return title.replace(/<[^>]+>/g, '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+};
+
 import { fetchPosts, Post } from './services/api';
 import PostComments from './components/PostComments';
 import SearchModal from './components/SearchModal';
@@ -79,16 +85,20 @@ export default function App() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const postId = params.get('post');
+    const tabName = params.get('tab');
+
     if (postId) {
       // Find the post and open it
       setActiveTab('posts');
       // Set to loading or just wait for the other useEffect to load posts, but since posts are loaded dynamically, let's fetch it specifically
       fetchPosts().then(allPosts => {
-        const found = allPosts.find(p => p.id.toString() === postId);
+        const found = allPosts.find(p => p.id.toString() === postId.split('-')[0]);
         if (found) {
           setSelectedPost(found);
         }
       }).catch(console.error);
+    } else if (tabName) {
+      setActiveTab(tabName);
     }
   }, []);
 
@@ -105,13 +115,16 @@ export default function App() {
 
   useEffect(() => {
     if (selectedPost) {
-      window.history.pushState({}, '', `${window.location.pathname}?post=${selectedPost.id}`);
+      window.history.pushState({}, '', `${window.location.pathname}?post=${selectedPost.id}-${generateSlug(selectedPost.title.rendered)}`);
       document.title = `Klebsuchan | ${selectedPost.title.rendered.replace(/<[^>]+>/g, '')}`;
+    } else if (activeTab && activeTab !== 'inicio') {
+      window.history.pushState({}, '', `${window.location.pathname}?tab=${activeTab}`);
+      document.title = `Klebsuchan | ${activeTab.charAt(0).toUpperCase() + activeTab.slice(1).replace('-', ' ')}`;
     } else {
       window.history.pushState({}, '', window.location.pathname);
       document.title = "Klebsuchan | Hub de Cultura Otaku, Nerd e Geek";
     }
-  }, [selectedPost]);
+  }, [selectedPost, activeTab]);
 
   const toggleTheme = () => {
     const newMode = !isDarkMode;
@@ -572,12 +585,12 @@ export default function App() {
       <header className="sticky top-0 h-auto min-h-[80px] py-4 lg:py-0 px-5 lg:px-10 flex items-center justify-between border-b border-border shrink-0 gap-4 z-40 bg-bg shadow-md">
         <div className="flex-1 hidden md:block">
           <nav className="flex gap-[15px] lg:gap-[20px] text-[10px] lg:text-[12px] uppercase tracking-[1px] text-muted">
-            <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</span>
-            <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'posts' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Artigos</span>
+            <a href="?tab=inicio" onClick={(e) => { e.preventDefault(); setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</a>
+            <a href="?tab=posts" onClick={(e) => { e.preventDefault(); setActiveTab("posts"); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className="cursor-pointer pb-1 transition-colors hover:text-accent">Artigos</a>
             <span className="hidden"></span>
             <span className="hidden"></span>
-            <span onClick={() => { setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'quem-somos' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Quem Somos</span>
-            <span onClick={() => { setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'contato' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Contato</span>
+            <a href="?tab=quem-somos" onClick={(e) => { e.preventDefault(); setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'quem-somos' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Quem Somos</a>
+            <a href="?tab=contato" onClick={(e) => { e.preventDefault(); setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'contato' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Contato</a>
           </nav>
         </div>
 
@@ -653,12 +666,12 @@ export default function App() {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="md:hidden fixed top-[80px] left-0 right-0 bg-bg border-b border-border z-30 flex flex-col p-5 gap-4 shadow-2xl">
-          <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'inicio' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Início</span>
-          <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: 'Últimos Artigos', categoryIds: []}); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'posts' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Artigos</span>
+          <a href="?tab=inicio" onClick={(e) => { e.preventDefault(); setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'inicio' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Início</a>
+          <a href="?tab=posts" onClick={(e) => { e.preventDefault(); setActiveTab("posts"); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className="cursor-pointer pb-1 transition-colors hover:text-accent">Artigos</a>
           <span className="hidden"></span>
           <span className="hidden"></span>
-          <span onClick={() => { setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'quem-somos' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Quem Somos</span>
-          <span onClick={() => { setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'contato' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Contato</span>
+          <a href="?tab=quem-somos" onClick={(e) => { e.preventDefault(); setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'quem-somos' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Quem Somos</a>
+          <a href="?tab=contato" onClick={(e) => { e.preventDefault(); setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'contato' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Contato</a>
         </div>
       )}
 
@@ -667,19 +680,15 @@ export default function App() {
           <div className="flex flex-col w-full max-w-7xl mx-auto p-6 sm:p-8 lg:p-10 gap-10">
             {/* HERO CTA SECTION */}
             <section className="relative w-full rounded-2xl overflow-hidden border border-border/80 hover:border-highlight/40 group bg-[#070707] flex flex-col md:flex-row items-center justify-between transition-all duration-750 shadow-[0_0_60px_rgba(0,0,0,0.95)] hover:shadow-[0_0_80px_rgba(240,151,11,0.15)]">
-              {/* Seamless Cinematic Cross-Fading Blur background using site images */}
-              {heroSlideDetails.map((slide, idx) => (
-                <div 
-                  key={idx}
-                  className="absolute inset-0 transition-opacity duration-[1500ms] ease-in-out blur-[65px] scale-115 pointer-events-none"
-                  style={{
-                    backgroundImage: `url("${slide.img}")`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    opacity: idx === currentHeroSlide ? 0.9 : 0,
-                  }}
-                />
-              ))}
+              {/* Video Background */}
+              <video 
+                src="/hero-background.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none opacity-60"
+              ></video>
               
               {/* Retro-cybernetic grid pattern overlay with dynamic kinetic scroll */}
               <div className="absolute inset-0 bg-[linear-gradient(rgba(240,151,11,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(240,151,11,0.02)_1px,transparent_1px)] [background-size:38px_38px] animate-grid-pan pointer-events-none opacity-85"></div>
@@ -838,10 +847,10 @@ export default function App() {
                   {homePosts.slice(0, 4).map((post, index) => (
                     <a 
                       key={post.id} 
-                      href={`/?post=${post.id}`}
+                      href={`/?post=${post.id}-${generateSlug(post.title.rendered)}`}
                       onClick={(e) => {
                         e.preventDefault();
-                        window.history.pushState({}, '', `/?post=${post.id}`);
+                        window.history.pushState({}, '', `/?post=${post.id}-${generateSlug(post.title.rendered)}`);
                         setSelectedPost(post);
                         setActiveTab('posts');
                       }}
@@ -998,10 +1007,10 @@ export default function App() {
                       .map(relatedPost => (
                         <a 
                           key={relatedPost.id} 
-                          href={`/?post=${relatedPost.id}`}
+                          href={`/?post=${relatedPost.id}-${generateSlug(relatedPost.title.rendered)}`}
                           onClick={(e) => {
                             e.preventDefault();
-                            window.history.pushState({}, '', `/?post=${relatedPost.id}`);
+                            window.history.pushState({}, '', `/?post=${relatedPost.id}-${generateSlug(relatedPost.title.rendered)}`);
                             setSelectedPost(relatedPost);
                             window.scrollTo({ top: 0, behavior: 'smooth' });
                           }}
@@ -1063,10 +1072,10 @@ export default function App() {
                       return (
                       <a 
                         key={post.id} 
-                        href={`/?post=${post.id}`}
+                        href={`/?post=${post.id}-${generateSlug(post.title.rendered)}`}
                         onClick={(e) => {
                           e.preventDefault();
-                          window.history.pushState({}, '', `/?post=${post.id}`);
+                          window.history.pushState({}, '', `/?post=${post.id}-${generateSlug(post.title.rendered)}`);
                           setSelectedPost(post);
                         }}
                         className="bg-card-bg border border-border cursor-pointer group hover:border-highlight transition-colors flex flex-col h-full overflow-hidden relative block"
@@ -1282,18 +1291,18 @@ export default function App() {
           <div className="flex flex-wrap gap-10 lg:gap-20">
             <div className="flex flex-col gap-3">
               <h4 className="font-bold uppercase tracking-wider text-accent mb-2">Navegação</h4>
-              <span onClick={() => { setActiveTab('inicio'); setSelectedPost(null); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Início</span>
-              <span onClick={() => { setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Artigos</span>
+              <a href="?tab=inicio" onClick={(e) => { e.preventDefault(); setActiveTab('inicio'); setSelectedPost(null); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Início</a>
+              <a href="?tab=posts" onClick={(e) => { e.preventDefault(); setActiveTab('posts'); setSelectedPost(null); setSelectedCategoryGroup({title: 'Últimos Artigos', categoryIds: []}); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Artigos</a>
               <span className="hidden"></span>
-              <span onClick={() => { setActiveTab('quem-somos'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Sobre o Autor</span>
+              <a href="?tab=quem-somos" onClick={(e) => { e.preventDefault(); setActiveTab('quem-somos'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Sobre o Autor</a>
             </div>
             
             <div className="flex flex-col gap-3">
               <h4 className="font-bold uppercase tracking-wider text-accent mb-2">Legal</h4>
-              <span onClick={() => { setActiveTab('termos'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Termos de Uso</span>
-              <span onClick={() => { setActiveTab('privacidade'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Política de Privacidade</span>
-              <span onClick={() => { setActiveTab('cookies'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Política de Cookies</span>
-              <span onClick={() => { setActiveTab('regras'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Regras de Comentários</span>
+              <a href="?tab=termos" onClick={(e) => { e.preventDefault(); setActiveTab('termos'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Termos de Uso</a>
+              <a href="?tab=privacidade" onClick={(e) => { e.preventDefault(); setActiveTab('privacidade'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Política de Privacidade</a>
+              <a href="?tab=cookies" onClick={(e) => { e.preventDefault(); setActiveTab('cookies'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Política de Cookies</a>
+              <a href="?tab=regras" onClick={(e) => { e.preventDefault(); setActiveTab('regras'); window.scrollTo(0,0); }} className="text-sm text-muted hover:text-highlight cursor-pointer transition-colors">Regras de Comentários</a>
             </div>
           </div>
         </div>
@@ -1320,7 +1329,7 @@ export default function App() {
           <div className="text-sm text-accent max-w-4xl">
             <p>
               Utilizamos cookies para melhorar sua experiência no Klebsuchan, personalizar conteúdo e anúncios, e analisar nosso tráfego. 
-              Ao continuar navegando, você concorda com a nossa <span onClick={() => { setActiveTab('cookies'); window.scrollTo(0,0); setShowCookieConsent(false); localStorage.setItem('cookieConsent', 'true'); }} className="text-highlight cursor-pointer hover:underline">Política de Cookies</span> e <span onClick={() => { setActiveTab('privacidade'); window.scrollTo(0,0); setShowCookieConsent(false); localStorage.setItem('cookieConsent', 'true'); }} className="text-highlight cursor-pointer hover:underline">Política de Privacidade</span>.
+              Ao continuar navegando, você concorda com a nossa <a href="?tab=cookies" onClick={(e) => { e.preventDefault(); setActiveTab('cookies'); window.scrollTo(0,0); setShowCookieConsent(false); localStorage.setItem('cookieConsent', 'true'); }} className="text-highlight cursor-pointer hover:underline">Política de Cookies</a> e <a href="?tab=privacidade" onClick={(e) => { e.preventDefault(); setActiveTab('privacidade'); window.scrollTo(0,0); setShowCookieConsent(false); localStorage.setItem('cookieConsent', 'true'); }} className="text-highlight cursor-pointer hover:underline">Política de Privacidade</a>.
             </p>
           </div>
           <div className="flex gap-3 shrink-0 w-full sm:w-auto">
