@@ -591,8 +591,7 @@ export default function App() {
           <nav className="flex gap-[15px] lg:gap-[20px] text-[10px] lg:text-[12px] uppercase tracking-[1px] text-muted">
             <a href="?tab=inicio" onClick={(e) => { e.preventDefault(); setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'inicio' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Início</a>
             <a href="?tab=posts" onClick={(e) => { e.preventDefault(); setActiveTab("posts"); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className="cursor-pointer pb-1 transition-colors hover:text-accent">Artigos</a>
-            <span className="hidden"></span>
-            <span className="hidden"></span>
+            <a href="?tab=loja" onClick={(e) => { e.preventDefault(); setActiveTab('loja'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'loja' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Loja</a>
             <a href="?tab=quem-somos" onClick={(e) => { e.preventDefault(); setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'quem-somos' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Quem Somos</a>
             <a href="?tab=contato" onClick={(e) => { e.preventDefault(); setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); }} className={`cursor-pointer pb-1 transition-colors ${activeTab === 'contato' ? 'text-accent border-b-2 border-highlight' : 'hover:text-accent'}`}>Contato</a>
           </nav>
@@ -672,8 +671,7 @@ export default function App() {
         <div className="md:hidden fixed top-[80px] left-0 right-0 bg-bg border-b border-border z-30 flex flex-col p-5 gap-4 shadow-2xl">
           <a href="?tab=inicio" onClick={(e) => { e.preventDefault(); setActiveTab('inicio'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'inicio' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Início</a>
           <a href="?tab=posts" onClick={(e) => { e.preventDefault(); setActiveTab("posts"); setSelectedPost(null); setSelectedCategoryGroup({title: "Últimos Artigos", categoryIds: []}); }} className="cursor-pointer pb-1 transition-colors hover:text-accent">Artigos</a>
-          <span className="hidden"></span>
-          <span className="hidden"></span>
+          <a href="?tab=loja" onClick={(e) => { e.preventDefault(); setActiveTab('loja'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'loja' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Loja</a>
           <a href="?tab=quem-somos" onClick={(e) => { e.preventDefault(); setActiveTab('quem-somos'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 border-b border-border uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'quem-somos' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Quem Somos</a>
           <a href="?tab=contato" onClick={(e) => { e.preventDefault(); setActiveTab('contato'); setSelectedPost(null); setSelectedCategoryGroup(null); setMobileMenuOpen(false); }} className={`pb-2 uppercase tracking-[2px] text-xs transition-colors cursor-pointer ${activeTab === 'contato' ? 'text-accent font-bold' : 'text-muted hover:text-accent'}`}>Contato</a>
         </div>
@@ -836,6 +834,23 @@ export default function App() {
                       </div>
                     </div>
                   ))}
+
+                  <div 
+                    className="group relative overflow-hidden rounded-xl border border-border h-40 flex items-center justify-center p-4 bg-card-bg transition-colors hover:border-highlight"
+                  >
+                    <div className="flex w-full h-full items-center gap-4">
+                       <img src="/images/qrcodepix.jpeg" alt="QR Code PIX" className="h-full object-contain rounded-lg border border-border shadow-lg" />
+                       <div className="flex flex-col justify-center flex-1 min-w-0">
+                          <h3 className="text-white text-lg font-serif font-black uppercase tracking-wide text-highlight mb-1 truncate">
+                            Apoie
+                          </h3>
+                          <p className="text-muted text-xs mb-2 line-clamp-2">Gosta do conteúdo? Doe via Pix!</p>
+                          <div className="text-[9px] font-mono text-muted select-all p-1.5 bg-bg border border-border rounded w-full overflow-hidden text-ellipsis whitespace-nowrap" title="00020126360014BR.GOV.BCB.PIX0114+5541999999999520400005303986540510.005802BR5915Kleber Camargo6008Curitiba62070503***63041D3D">
+                            00020126360014BR.GOV.BCB.PIX0114+5541999999999520400005303986540510.005802BR5915Kleber Camargo6008Curitiba62070503***63041D3D
+                          </div>
+                       </div>
+                    </div>
+                  </div>
 
                   
                 </div>
@@ -1127,6 +1142,12 @@ export default function App() {
                 )}
               </div>
             )}
+          </section>
+        )}
+
+        {activeTab === 'loja' && (
+          <section className="flex-1 w-full flex flex-col">
+            <Store />
           </section>
         )}
 
